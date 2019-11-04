@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "declaration": true,
+        "declarationMap": true,
+        "rootDir": ".",
+        "composite": true,
+        "noUnusedLocals": false
+    },
+    "references": [],
+    "lib": [ //any libraries
+        "es2016",
+        "dom",
+        "es5"
+    ]
+}
