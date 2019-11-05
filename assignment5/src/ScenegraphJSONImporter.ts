@@ -65,10 +65,20 @@ export namespace ScenegraphJSONImporter {
 
         }
         if ("lights" in obj) {
-            let lightArr: Light[] = obj["lights"];
-            lightArr.forEach((light: Light) => {
+            for (let op of (Object)(obj["lights"])) {
+                let light: Light = new Light();
+                light.setAmbient(op["ambient"]);
+                light.setDiffuse(op["diffuse"]);
+                light.setPosition(op["position"]);
+                light.setSpecular(op["specular"]);
+                if ("spotdirection" in op) {
+                    light.setSpotDirection(op["spotdirection"]);
+                    light.setSpotAngle(op["spotangle"]);
+                } else {
+                    light.setSpotAngle(180);   
+                }
                 result.addLight(light);
-            });
+            }
             console.log(result.getLights());
         }
         return result;
