@@ -147,10 +147,10 @@ export class Controller implements Features {
                     specular = material.specular * light[i].specular * pow(rDotV,material.shininess);
                 else
                     specular = vec3(0,0,0);
-                number angle = arccos(dot(light[i].spotDirection, lightVec));
-                if (angle > spotDirection.spotCutoff) {
-                    result = result + vec4(ambient+diffuse+specular,1.0);
-                }
+                // number angle = arccos(dot(light[i].spotDirection, lightVec));
+                // if (angle > spotDirection.spotCutoff) {
+                result = result + vec4(ambient+diffuse+specular,1.0);
+                // }
             }
             result = result * texture2D(image,fTexCoord.st);
            // result = vec4(0.5*(fTexCoord.st+vec2(1,1)),0.0,1.0);

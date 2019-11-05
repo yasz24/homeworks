@@ -107,6 +107,7 @@ export abstract class SGNode {
 
     public copyLight(light: Light): Light {
         let newLight: Light = new Light();
+        console.log(light);
         newLight.setAmbient(light.getAmbient());
         newLight.setSpecular(light.getSpecular());
         newLight.setDiffuse(light.getDiffuse());
@@ -117,7 +118,7 @@ export abstract class SGNode {
     }
 
     public copyLights() {
-        let res: Light[];
+        let res: Light[] = [];
         this.lights.forEach((light) => {
             res.push(this.copyLight(light));
         });

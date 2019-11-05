@@ -203,6 +203,38 @@ export class View {
             "root":
             {
                 "type":"group",
+                "lights": [
+                    {
+                      "ambient": [
+                        0.4,
+                        0.4,
+                        0.4
+                      ],
+                      "diffuse": [
+                        0.4,
+                        0.4,
+                        0.4
+                      ],
+                      "specular": [
+                        0.4,
+                        0.4,
+                        0.4
+                      ],
+                      "position": [
+                        0.0,
+                        100.0,
+                        100.0,
+                        1.0
+                      ],
+                      "spotdirection": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "spotcutoff": 180.0
+                    }
+                  ],
                 "children":[${this.drawObject1()}, ${this.drawObject2()}, ${this.drawObject3()}, 
                     ${this.drawObject4()}, ${this.drawObject5()}, ${this.drawObject6()}, 
                     ${this.drawObject7()}, 
