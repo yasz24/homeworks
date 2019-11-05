@@ -980,6 +980,19 @@ export class View {
                     break;
         }
 
+        let lights = this.scenegraph.findLights(this.modelview);
+
+        //send all the light colors
+        for (let i: number = 0; i < lights.length; i++) {
+            let ambientLocation: string = "light[" + i + "].ambient";
+            let diffuseLocation: string = "light[" + i + "].diffuse";
+            let specularLocation: string = "light[" + i + "].specular";
+            let lightPositionLocation: string = "light[" + i + "].position";
+            this.gl.uniform4fv(this.shaderLocations.getUniformLocation(lightPositionLocation), lights[i].getPosition());
+            this.gl.uniform3fv(this.shaderLocations.getUniformLocation(ambientLocation), lights[i].getAmbient());
+            this.gl.uniform3fv(this.shaderLocations.getUniformLocation(diffuseLocation), lights[i].getDiffuse());
+            this.gl.uniform3fv(this.shaderLocations.getUniformLocation(specularLocation), lights[i].getSpecular());
+        }
         
 
         this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("proj"), false, this.proj);

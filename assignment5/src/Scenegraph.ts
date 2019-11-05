@@ -5,6 +5,7 @@ import { ScenegraphRenderer } from "ScenegraphRenderer";
 import { mat4, glMatrix, vec3 } from "gl-matrix";
 import { Stack } from "%COMMON/Stack";
 import { PlaneAttributes } from "planeAttribsParse";
+import { Light } from "%COMMON/Light";
 
 /**
  * A specific implementation of this scene graph. This implementation is still independent
@@ -84,6 +85,12 @@ export class Scenegraph<VertexType extends IVertexData> {
         if ((this.root != null) && (this.renderer != null)) {
             this.renderer.draw(this.root, modelView);
         }
+    }
+
+    public findLights(modelView: Stack<mat4>): Light[] {
+        let res: Light[] = [];
+        this.root.findLights(res, modelView);
+        return res;
     }
 
     public addPolygonMesh(meshName: string, mesh: Mesh.PolygonMesh<VertexType>): void {

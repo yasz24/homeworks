@@ -5,6 +5,7 @@ import { Stack } from "%COMMON/Stack";
 import { ScenegraphRenderer } from "./ScenegraphRenderer";
 import { mat4 } from "gl-matrix";
 import { IVertexData } from "%COMMON/IVertexData";
+import { Light } from "%COMMON/Light";
 
 /**
  * This node represents the leaf of a scene graph. It is the only type of node that has
@@ -78,5 +79,7 @@ export class LeafNode extends SGNode {
         }
     }
 
-
+    public findLights(acc: Light[], modelView: Stack<mat4>): void { 
+        acc.concat(this.getTransformedLights(modelView.peek()));
+    }
 }

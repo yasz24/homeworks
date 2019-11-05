@@ -1,4 +1,4 @@
-import { mat4 } from "gl-matrix"
+import { mat4, vec3, vec4 } from "gl-matrix"
 import { Scenegraph } from "Scenegraph"
 import { Stack } from "%COMMON/Stack";
 import { ScenegraphRenderer } from "ScenegraphRenderer";
@@ -80,6 +80,7 @@ export abstract class SGNode {
     }
 
     public abstract draw(context: ScenegraphRenderer, modelView: Stack<mat4>): void;
+    public abstract findLights(acc: Light[], modelView: Stack<mat4>): void;
     public abstract clone(): SGNode;
     public setTransform(transform: mat4): void {
         throw new Error("Not supported");
@@ -102,5 +103,35 @@ export abstract class SGNode {
 
     public getLights(): Light[] {
         return this.lights
+    }
+
+    public copyLight(light: Light): Light {
+        let newLight: Light = new Light();
+        newLight.setAmbient(light.getAmbient());
+        newLight.setSpecular(light.getSpecular());
+        newLight.setDiffuse(light.getDiffuse());
+        newLight.setPosition(vec3.fromValues(light.getPosition()[0], light.getPosition()[1], light.getPosition()[2]));
+        newLight.setSpotDirection(vec3.fromValues(light.getSpotDirection()[0], light.getSpotDirection()[1], light.getSpotDirection()[2]));
+        newLight.setSpotAngle(light.getSpotCutoff());
+        return newLight
+    }
+
+    public copyLights() {
+        let res: Light[];
+        this.lights.forEach((light) => {
+            res.push(this.copyLight(light));
+        });
+        return res;
+    }
+
+    public getTransformedLights(modelView: mat4): Light[] {
+        let res: Light[] = this.copyLights();
+
+        res.forEach((light) => {
+            let lightPos: vec4 = vec4.create()
+            vec4.transformMat4(lightPos, light.getPosition(), modelView)
+            light.setPosition(vec3.fromValues(lightPos[0], lightPos[1], lightPos[2]));
+        });
+        return res;
     }
 }

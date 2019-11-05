@@ -4,6 +4,7 @@ import { Scenegraph } from "./Scenegraph";
 import { Stack } from "%COMMON/Stack";
 import { ScenegraphRenderer } from "./ScenegraphRenderer";
 import { IVertexData } from "%COMMON/IVertexData";
+import { Light } from "%COMMON/Light";
 
 /**
  * This node represents a transformation in the scene graph. It has only one child. The 
@@ -109,6 +110,16 @@ export class TransformNode extends SGNode {
 
         if (this.child != null)
             this.child.draw(context, modelView);
+        modelView.pop();
+    }
+
+    public findLights(acc: Light[], modelView: Stack<mat4>): void {
+        modelView.push(mat4.clone(modelView.peek()));
+        mat4.multiply(modelView.peek(), modelView.peek(), this.animationTransform);
+        mat4.multiply(modelView.peek(), modelView.peek(), this.transform);
+        acc.concat(this.getTransformedLights(modelView.peek()));
+        if (this.child != null)
+            this.child.findLights(acc, modelView);
         modelView.pop();
     }
 
