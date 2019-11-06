@@ -147,8 +147,8 @@ export class Controller implements Features {
                     specular = material.specular * light[i].specular * pow(rDotV,material.shininess);
                 else
                     specular = vec3(0,0,0);
-                // number angle = arccos(dot(light[i].spotDirection, lightVec));
-                // if (angle > spotDirection.spotCutoff) {
+                // number angle = arccos(dot(light[i].spotDirection, -lightVec));
+                // if (angle < glMatrix.toRadian(spotDirection.spotCutoff)) {
                 result = result + vec4(ambient+diffuse+specular,1.0);
                 // }
             }
