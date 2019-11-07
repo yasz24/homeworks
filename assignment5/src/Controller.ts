@@ -149,12 +149,10 @@ export class Controller implements Features {
                 else
                     specular = vec3(0,0,0);
                 float phi = dot(light[i].spotDirection.xyz, -lightVec);
-                if (phi > cos(radians(light[i].spotCutoff))) 
+                if (phi > cos(light[i].spotCutoff)) 
                     result = result + vec4(ambient+diffuse+specular,1.0);
                 
             }
-           //result = result * texture2D(image,fTexCoord.st);
-           // result = vec4(0.5*(fTexCoord.st+vec2(1,1)),0.0,1.0);
             gl_FragColor = result;
         }
         

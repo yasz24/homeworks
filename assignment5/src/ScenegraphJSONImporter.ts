@@ -73,9 +73,9 @@ export namespace ScenegraphJSONImporter {
                 light.setSpecular(op["specular"]);
                 if ("spotdirection" in op) {
                     light.setSpotDirection(op["spotdirection"]);
-                    light.setSpotAngle(op["spotcutoff"]);
+                    light.setSpotAngle(glMatrix.toRadian(op["spotcutoff"]));
                 } else {
-                    light.setSpotAngle(180);   
+                    light.setSpotAngle(Math.PI);   
                 }
                 result.addLight(light);
             }
