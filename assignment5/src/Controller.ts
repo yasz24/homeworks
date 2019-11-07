@@ -150,7 +150,7 @@ export class Controller implements Features {
                     specular = vec3(0,0,0);
                 float phi = acos(dot(light[i].spotDirection.xyz, -lightVec));
                 if (phi < radians(light[i].spotCutoff)) 
-                result = result + vec4(ambient+diffuse+specular,1.0);
+                    result = result + vec4(ambient+diffuse+specular,1.0);
                 
             }
            //result = result * texture2D(image,fTexCoord.st);

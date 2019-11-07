@@ -1086,10 +1086,14 @@ export class View {
             let diffuseLocation: string = "light[" + i + "].diffuse";
             let specularLocation: string = "light[" + i + "].specular";
             let lightPositionLocation: string = "light[" + i + "].position";
+            let lightSpotDirection: string = "light[" + i + "].spotDirection";
+            let lightSpotCutoff: string = "light[" + i + "].spotCutoff";
             this.gl.uniform4fv(this.shaderLocations.getUniformLocation(lightPositionLocation), lights[i].getPosition());
             this.gl.uniform3fv(this.shaderLocations.getUniformLocation(ambientLocation), lights[i].getAmbient());
             this.gl.uniform3fv(this.shaderLocations.getUniformLocation(diffuseLocation), lights[i].getDiffuse());
             this.gl.uniform3fv(this.shaderLocations.getUniformLocation(specularLocation), lights[i].getSpecular());
+            this.gl.uniform4fv(this.shaderLocations.getUniformLocation(lightSpotDirection), lights[i].getSpotDirection());
+            this.gl.uniform1f(this.shaderLocations.getUniformLocation(lightSpotCutoff), lights[i].getSpotCutoff());
         }
         
 
