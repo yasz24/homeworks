@@ -310,7 +310,7 @@ export class View {
                 "lights": [
                     {
                         "ambient": [
-                          1.0,
+                          0.0,
                           0.0,
                           0.0
                         ],
@@ -326,6 +326,66 @@ export class View {
                         ],
                         "position": [
                           0.0, 
+                          1.5, 
+                          0.0,
+                          1.0
+                        ],
+                        "spotdirection": [
+                          0.0,
+                          1.0,
+                          0.0,
+                          0.0
+                        ],
+                        "spotcutoff": 20.0
+                      },
+                      {
+                        "ambient": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "diffuse": [
+                          1.0,
+                          1.0,
+                          0.0
+                        ],
+                        "specular": [
+                          1.0,
+                          1.0,
+                          0.0
+                        ],
+                        "position": [
+                          3.0, 
+                          1.5, 
+                          0.0,
+                          1.0
+                        ],
+                        "spotdirection": [
+                          0.0,
+                          1.0,
+                          0.0,
+                          0.0
+                        ],
+                        "spotcutoff": 20.0
+                      },
+                      {
+                        "ambient": [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "diffuse": [
+                          1.0,
+                          1.0,
+                          0.0
+                        ],
+                        "specular": [
+                          1.0,
+                          1.0,
+                          0.0
+                        ],
+                        "position": [
+                          -3.0, 
                           1.5, 
                           0.0,
                           1.0

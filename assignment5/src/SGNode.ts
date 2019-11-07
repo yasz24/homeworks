@@ -136,6 +136,7 @@ export abstract class SGNode {
             light.setPosition(vec3.fromValues(lightPos[0], lightPos[1], lightPos[2]));
             let spotDir: vec4 = vec4.create()
             vec4.transformMat4(spotDir, light.getSpotDirection(), modelView);
+            vec4.normalize(spotDir, spotDir);
             light.setSpotDirection(vec3.fromValues(spotDir[0], spotDir[1], spotDir[2]));
         });
         // if (res.length >= 1) {
