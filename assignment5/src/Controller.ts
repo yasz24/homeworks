@@ -148,8 +148,8 @@ export class Controller implements Features {
                     specular = material.specular * light[i].specular * pow(rDotV,material.shininess);
                 else
                     specular = vec3(0,0,0);
-                //float angle = acos(dot(light[i].spotDirection.xyz, -lightVec));
-                //if (angle < radians(light[i].spotCutoff)) 
+                float phi = acos(dot(light[i].spotDirection.xyz, -lightVec));
+                if (phi < radians(light[i].spotCutoff)) 
                 result = result + vec4(ambient+diffuse+specular,1.0);
                 
             }
