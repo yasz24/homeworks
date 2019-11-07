@@ -316,12 +316,12 @@ export class View {
                         ],
                         "diffuse": [
                           1.0,
-                          0.0,
+                          1.0,
                           0.0
                         ],
                         "specular": [
                           1.0,
-                          0.0,
+                          1.0,
                           0.0
                         ],
                         "position": [
@@ -346,12 +346,12 @@ export class View {
                         ],
                         "diffuse": [
                           1.0,
-                          1.0,
+                          0.0,
                           0.0
                         ],
                         "specular": [
                           1.0,
-                          1.0,
+                          0.0,
                           0.0
                         ],
                         "position": [
@@ -376,12 +376,12 @@ export class View {
                         ],
                         "diffuse": [
                           1.0,
-                          1.0,
+                          0.0,
                           0.0
                         ],
                         "specular": [
                           1.0,
-                          1.0,
+                          0.0,
                           0.0
                         ],
                         "position": [
