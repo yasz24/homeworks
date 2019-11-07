@@ -88,9 +88,9 @@ export class Scenegraph<VertexType extends IVertexData> {
     }
 
     public findLights(modelView: Stack<mat4>): Light[] {
-        let res: Light[] = [];
-        this.root.findLights(res, modelView);
-        return res;
+        //let res: Light[] = this.root.findLights(modelView);
+        //console.log(res);
+        return this.root.findLights(modelView);
     }
 
     public addPolygonMesh(meshName: string, mesh: Mesh.PolygonMesh<VertexType>): void {

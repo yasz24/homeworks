@@ -80,7 +80,7 @@ export abstract class SGNode {
     }
 
     public abstract draw(context: ScenegraphRenderer, modelView: Stack<mat4>): void;
-    public abstract findLights(acc: Light[], modelView: Stack<mat4>): void;
+    public abstract findLights(modelView: Stack<mat4>): Light[];
     public abstract clone(): SGNode;
     public setTransform(transform: mat4): void {
         throw new Error("Not supported");
@@ -107,7 +107,7 @@ export abstract class SGNode {
 
     public copyLight(light: Light): Light {
         let newLight: Light = new Light();
-        console.log(light);
+        //console.log(light);
         newLight.setAmbient(light.getAmbient());
         newLight.setSpecular(light.getSpecular());
         newLight.setDiffuse(light.getDiffuse());
@@ -122,17 +122,22 @@ export abstract class SGNode {
         this.lights.forEach((light) => {
             res.push(this.copyLight(light));
         });
+        // if (res.length >= 1) {
+        //     console.log(res);
+        // }
         return res;
     }
 
     public getTransformedLights(modelView: mat4): Light[] {
         let res: Light[] = this.copyLights();
-
         res.forEach((light) => {
             let lightPos: vec4 = vec4.create()
             vec4.transformMat4(lightPos, light.getPosition(), modelView)
             light.setPosition(vec3.fromValues(lightPos[0], lightPos[1], lightPos[2]));
         });
+        // if (res.length >= 1) {
+        //     console.log(res);
+        // }
         return res;
     }
 }

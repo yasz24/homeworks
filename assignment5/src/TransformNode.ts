@@ -113,14 +113,23 @@ export class TransformNode extends SGNode {
         modelView.pop();
     }
 
-    public findLights(acc: Light[], modelView: Stack<mat4>): void {
+    public findLights(modelView: Stack<mat4>): Light[] {
+        let res: Light[] = [];
         modelView.push(mat4.clone(modelView.peek()));
         mat4.multiply(modelView.peek(), modelView.peek(), this.animationTransform);
         mat4.multiply(modelView.peek(), modelView.peek(), this.transform);
-        acc.concat(this.getTransformedLights(modelView.peek()));
+        res = this.getTransformedLights(modelView.peek());
+        // if (this.getTransformedLights(modelView.peek()).length >= 1) {
+        //     console.log(this.getTransformedLights(modelView.peek()));
+        // }
+        // acc = acc.concat(this.getTransformedLights(modelView.peek()));
+        // if (!(acc.length >= accInLen)) {
+        //     console.log("problem");
+        // }
         if (this.child != null)
-            this.child.findLights(acc, modelView);
+        res = res.concat(this.child.findLights(modelView));
         modelView.pop();
+        return res
     }
 
 

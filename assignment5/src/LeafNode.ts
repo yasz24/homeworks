@@ -79,7 +79,18 @@ export class LeafNode extends SGNode {
         }
     }
 
-    public findLights(acc: Light[], modelView: Stack<mat4>): void { 
-        acc.concat(this.getTransformedLights(modelView.peek()));
+    public findLights(modelView: Stack<mat4>): Light[] {
+        return this.getTransformedLights(modelView.peek());
+        // // if (acc.length >= 1) {
+        // //     console.log(acc);
+        // // }
+        // // if (this.getTransformedLights(modelView.peek()).length >= 1) {
+        // //     console.log(this.getTransformedLights(modelView.peek()));
+        // // }
+        // let accInLen = acc.length;
+        // acc = acc.concat(this.getTransformedLights(modelView.peek()));
+        // if (!(acc.length >= accInLen)) {
+        //     console.log("problem");
+        // }
     }
 }

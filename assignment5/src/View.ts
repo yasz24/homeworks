@@ -158,6 +158,8 @@ export class View {
             .then((s: Scenegraph<VertexPNT>) => {
                 let shaderVarsToVertexAttribs: Map<string, string> = new Map<string, string>();
                 shaderVarsToVertexAttribs.set("vPosition", "position");
+                shaderVarsToVertexAttribs.set("vNormal", "normal");
+                //shaderVarsToVertexAttribs.set("vTexCoord", "texcoord");
                 let renderer: ScenegraphRenderer = new ScenegraphRenderer(this.gl, this.shaderLocations, shaderVarsToVertexAttribs);
                 this.scenegraph = s;
                 this.scenegraph.setRenderer(renderer);
@@ -223,7 +225,7 @@ export class View {
                       "position": [
                         0.0,
                         100.0,
-                        100.0,
+                        -27.5,
                         1.0
                       ],
                       "spotdirection": [
@@ -233,7 +235,37 @@ export class View {
                         0.0
                       ],
                       "spotcutoff": 180.0
-                    }
+                    },
+                    {
+                        "ambient": [
+                          0.4,
+                          0.4,
+                          0.4
+                        ],
+                        "diffuse": [
+                          0.4,
+                          0.4,
+                          0.4
+                        ],
+                        "specular": [
+                          0.4,
+                          0.4,
+                          0.4
+                        ],
+                        "position": [
+                          80.0, 
+                          175.0, 
+                          -27.5,
+                          1.0
+                        ],
+                        "spotdirection": [
+                          0.0,
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        "spotcutoff": 180.0
+                      }
                   ],
                 "children":[${this.drawObject1()}, ${this.drawObject2()}, ${this.drawObject3()}, 
                     ${this.drawObject4()}, ${this.drawObject5()}, ${this.drawObject6()}, 
@@ -272,10 +304,41 @@ export class View {
                 "type":"transform",
                 "name":"aeroplane",
                 "transform":[
-                    {"translate":[0,100,-27.5]},
                     {"rotate":[90,1,0,0]}
                 ],
-                "child": ${this.objectJson("plane",scale, color, 4)}
+                "child": ${this.objectJson("plane",scale, color, 4)},
+                "lights": [
+                    {
+                        "ambient": [
+                          1.0,
+                          0.0,
+                          0.0
+                        ],
+                        "diffuse": [
+                          1.0,
+                          0.0,
+                          0.0
+                        ],
+                        "specular": [
+                          1.0,
+                          0.0,
+                          0.0
+                        ],
+                        "position": [
+                          0.0, 
+                          1.5, 
+                          0.0,
+                          1.0
+                        ],
+                        "spotdirection": [
+                          0.0,
+                          1.0,
+                          0.0,
+                          0.0
+                        ],
+                        "spotcutoff": 20.0
+                      }
+                ]
             }
         `
     }
@@ -769,7 +832,10 @@ export class View {
                     "type":"object",
                     "instanceof":"${type}",
                     "material": {
-                        "color":[${color[0]}, ${color[1]}, ${color[2]}]
+                        "ambient":[${color[0] / 1.5}, ${color[1] / 1.5}, ${color[2] / 1.5}],
+                        "specular":[${color[0]}, ${color[1]}, ${color[2]}],
+                        "diffuse":[${color[0]}, ${color[1]}, ${color[2]}],
+                        "shininess": 10
                     }
             }
             
@@ -1027,7 +1093,7 @@ export class View {
         }
         
 
-        this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("proj"), false, this.proj);
+        this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("projection"), false, this.proj);
 
 
 

@@ -13,7 +13,7 @@ export class Controller implements Features {
     }
 
     public go(): void {
-        this.view.initShaders(this.getVShader(), this.getFShader());
+        this.view.initShaders(this.getPhongVShader(), this.getPhongFShader(5));
         this.view.initScenegraph();
         this.view.initPlaneAttribs();
         this.view.draw();
@@ -49,15 +49,15 @@ export class Controller implements Features {
         return `
         attribute vec4 vPosition;
         attribute vec4 vNormal;
-        attribute vec2 vTexCoord;
+        //attribute vec2 vTexCoord;
         
         uniform mat4 projection;
         uniform mat4 modelview;
         uniform mat4 normalmatrix;
-        uniform mat4 texturematrix;
+        //uniform mat4 texturematrix;
         varying vec3 fNormal;
         varying vec4 fPosition;
-        varying vec4 fTexCoord;
+        //varying vec4 fTexCoord;
         
         void main()
         {
@@ -72,7 +72,7 @@ export class Controller implements Features {
             vec4 tNormal = normalmatrix * vNormal;
             fNormal = normalize(tNormal.xyz);
         
-            fTexCoord = texturematrix * vec4(vTexCoord.s,vTexCoord.t,0,1);
+            //fTexCoord = texturematrix * vec4(vTexCoord.s,vTexCoord.t,0,1);
         
         }
         
@@ -94,22 +94,23 @@ export class Controller implements Features {
         {
             vec3 ambient;
             vec3 diffuse;
-
             vec3 specular;
             vec4 position;
+            vec4 spotDirection;
+            float spotCutoff;
         };
         
         
         varying vec3 fNormal;
         varying vec4 fPosition;
-        varying vec4 fTexCoord;
+        //varying vec4 fTexCoord;
         
         
         uniform MaterialProperties material;
         uniform LightProperties light[`+ numLights + `];
         
         /* texture */
-        uniform sampler2D image;
+        //uniform sampler2D image;
         
         void main()
         {
@@ -147,12 +148,12 @@ export class Controller implements Features {
                     specular = material.specular * light[i].specular * pow(rDotV,material.shininess);
                 else
                     specular = vec3(0,0,0);
-                // number angle = arccos(dot(light[i].spotDirection, -lightVec));
-                // if (angle < glMatrix.toRadian(spotDirection.spotCutoff)) {
+                //float angle = acos(dot(light[i].spotDirection.xyz, -lightVec));
+                //if (angle < radians(light[i].spotCutoff)) 
                 result = result + vec4(ambient+diffuse+specular,1.0);
-                // }
+                
             }
-            result = result * texture2D(image,fTexCoord.st);
+           //result = result * texture2D(image,fTexCoord.st);
            // result = vec4(0.5*(fTexCoord.st+vec2(1,1)),0.0,1.0);
             gl_FragColor = result;
         }

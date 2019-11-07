@@ -73,7 +73,7 @@ export namespace ScenegraphJSONImporter {
                 light.setSpecular(op["specular"]);
                 if ("spotdirection" in op) {
                     light.setSpotDirection(op["spotdirection"]);
-                    light.setSpotAngle(op["spotangle"]);
+                    light.setSpotAngle(op["spotcutoff"]);
                 } else {
                     light.setSpotAngle(180);   
                 }

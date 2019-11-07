@@ -109,13 +109,29 @@ export class ScenegraphRenderer {
         if (this.meshRenderers.has(meshName)) {
             //get the color
 
-            let loc: WebGLUniformLocation = this.shaderLocations.getUniformLocation("vColor");
-            //set the color for all vertices to be drawn for this object
-            let color: vec4 = vec4.fromValues(material.getAmbient()[0], material.getAmbient()[1], material.getAmbient()[2], 1);
-            this.gl.uniform4fv(loc, color);
+            // let loc: WebGLUniformLocation = this.shaderLocations.getUniformLocation("vColor");
+            // //set the color for all vertices to be drawn for this object
+            // let color: vec4 = vec4.fromValues(material.getAmbient()[0], material.getAmbient()[1], material.getAmbient()[2], 1);
+            // this.gl.uniform4fv(loc, color);
+            //console.log(material);
+            //send material to the shader
+            this.gl.uniform3fv(this.shaderLocations.getUniformLocation("material.ambient"), material.getAmbient());
+            this.gl.uniform3fv(this.shaderLocations.getUniformLocation("material.diffuse"), material.getDiffuse());
+            this.gl.uniform3fv(this.shaderLocations.getUniformLocation("material.specular"), material.getSpecular());
+            this.gl.uniform1f(this.shaderLocations.getUniformLocation("material.shininess"), material.getShininess());
 
-            loc = this.shaderLocations.getUniformLocation("modelview");
+            let loc: WebGLUniformLocation = this.shaderLocations.getUniformLocation("modelview");
             this.gl.uniformMatrix4fv(loc, false, transformation);
+
+            //the normal matrix = inverse transpose of modelview
+            let normalMatrix: mat4 = mat4.clone(transformation);
+            mat4.transpose(normalMatrix, normalMatrix);
+            mat4.invert(normalMatrix, normalMatrix);
+
+            this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("normalmatrix"), false, normalMatrix);
+
+            //send the texture matrix
+            //this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("texturematrix"), false, mat4.create());
 
             this.meshRenderers.get(meshName).draw(this.shaderLocations);
         }
