@@ -7,6 +7,7 @@ import { SGNode } from "SGNode";
 import { Stack } from "%COMMON/Stack";
 import { mat4, vec4 } from "gl-matrix";
 import { Material } from "%COMMON/Material";
+import { TextureObject } from "%COMMON/TextureObject" 
 
 /**
  * This is a scene graph renderer implementation that works specifically with WebGL.

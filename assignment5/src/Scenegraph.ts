@@ -64,6 +64,10 @@ export class Scenegraph<VertexType extends IVertexData> {
             this.renderer.addMesh(meshName, mesh);
         }
 
+        //now add all textures
+        for (let [textureName, textureUrl] of this.textures) {
+            this.renderer.addTexture(textureName, textureUrl);
+        }
     }
 
 

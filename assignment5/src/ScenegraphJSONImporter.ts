@@ -28,19 +28,36 @@ export namespace ScenegraphJSONImporter {
             if (!("instances" in jsonTree)) {
                 throw new Error("No meshes in the scene graph!");
             }
-            handleInstances(scenegraph, jsonTree["instances"], producer)
+            if ("images" in jsonTree) {
+                handleTextures(scenegraph, jsonTree["images"])
                 .then((scenegraph: Scenegraph<VertexType>) => {
-                    if (!("root" in jsonTree)) {
-                        throw new Error("No root in the scene graph!");
-                    }
+                    handleInstances(scenegraph, jsonTree["instances"], producer)
+                        .then((scenegraph: Scenegraph<VertexType>) => {
+                            if (!("root" in jsonTree)) {
+                                throw new Error("No root in the scene graph!");
+                            }
 
-                    root = handleNode(scenegraph, jsonTree["root"]);
+                            root = handleNode(scenegraph, jsonTree["root"]);
 
-                    scenegraph.makeScenegraph(root);
+                            scenegraph.makeScenegraph(root);
 
-                    resolve(scenegraph);
-                });
+                            resolve(scenegraph);
+                        });
+                })
+            } else {
+                handleInstances(scenegraph, jsonTree["instances"], producer)
+                    .then((scenegraph: Scenegraph<VertexType>) => {
+                        if (!("root" in jsonTree)) {
+                            throw new Error("No root in the scene graph!");
+                        }
 
+                        root = handleNode(scenegraph, jsonTree["root"]);
+
+                        scenegraph.makeScenegraph(root);
+
+                        resolve(scenegraph);
+                    });
+            }
         });
 
     }
@@ -171,6 +188,10 @@ export namespace ScenegraphJSONImporter {
         let material: Material = new Material(); //all black by default
         result = new LeafNode(obj["instanceof"], scenegraph, nodeName);
 
+        if ("texture" in obj) {
+            result.setTextureName(obj["texture"]);
+        }
+
         if ("material" in obj) {
             if ("color" in obj["material"]) {
                 material.setAmbient([obj["material"]["color"][0], obj["material"]["color"][1], obj["material"]["color"][2]]);
@@ -184,6 +205,16 @@ export namespace ScenegraphJSONImporter {
             //console.log(result["material"])
         }
         return result;
+    }
+
+    export function handleTextures<VertexType extends IVertexData>(scenegraph: Scenegraph<VertexType>, obj: Object): Promise<Scenegraph<VertexType>> {
+        return new Promise<Scenegraph<VertexType>>((resolve) => {
+            for (let n of Object.keys(obj)) {
+                let path: string = obj[n]["path"];
+                scenegraph.addTexture(obj[n]["name"],  path);
+            }
+            resolve(scenegraph);
+        });
     }
 
     export function handleInstances<VertexType extends IVertexData>(scenegraph: Scenegraph<VertexType>, obj: Object, producer: VertexProducer<VertexType>): Promise<Scenegraph<VertexType>> {
