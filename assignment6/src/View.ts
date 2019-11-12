@@ -159,7 +159,7 @@ export class View {
                 let shaderVarsToVertexAttribs: Map<string, string> = new Map<string, string>();
                 shaderVarsToVertexAttribs.set("vPosition", "position");
                 shaderVarsToVertexAttribs.set("vNormal", "normal");
-                //shaderVarsToVertexAttribs.set("vTexCoord", "texcoord");
+                shaderVarsToVertexAttribs.set("vTexCoord", "texcoord");
                 let renderer: ScenegraphRenderer = new ScenegraphRenderer(this.gl, this.shaderLocations, shaderVarsToVertexAttribs);
                 this.scenegraph = s;
                 this.scenegraph.setRenderer(renderer);
@@ -200,6 +200,24 @@ export class View {
                 {
                     "name":"plane",
                     "path":"models/aeroplane.obj"
+                }
+            ],
+            "images": [
+                {
+                    "name": "roof",
+                    "path": "textures/roof.jpg"
+                },
+                {
+                    "name": "wall",
+                    "path": "textures/wall-bricks-220182.jpg"
+                },
+                {
+                    "name": "wall2",
+                    "path": "textures/gray-wall-bricks-161945-1.jpg"
+                },
+                {
+                    "name": "white",
+                    "path": "textures/white.png"
                 }
             ],
             "root":
@@ -431,7 +449,7 @@ export class View {
 
     private drawObject3(): string {
         let scale: number[] = [15, 20, -35]
-        let color: number[] = [153 / 255, 217 / 255, 234 / 255]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -446,7 +464,7 @@ export class View {
 
     private drawObject4(): string {
         let scale: number[] = [20, 20, -35]
-        let color: number[] = [0.5, 0, 0.5]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -474,7 +492,7 @@ export class View {
 
     private drawObject6(): string {
         let scale: number[] = [50, 20, -10]
-        let color: number[] = [1, 1, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -489,7 +507,7 @@ export class View {
 
     private drawObject7(): string {
         let scale: number[] = [15, 20, -20]
-        let color: number[] = [1, 0, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -504,11 +522,11 @@ export class View {
 
     private drawObject8(): string {
         let boxScale: number[] = [15,50, -15]
-        let boxColor: number[] = [0.5, 0.5, 0.5]
+        let boxColor: number[] = [1, 1, 1]
         let cylinderScale: number[] = [15, 10, -15]
         let cylinderColor: number[] = [1, 1, 1]
         let coneScale: number[] = [15, 10, -15]
-        let coneColor: number[] = [170 / 255, 130 / 255, 51 / 255]
+        let coneColor: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -523,7 +541,7 @@ export class View {
 
     private drawObject9(): string {
         let scale: number[] = [15, 20, -10]
-        let color: number[] = [1, 1, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -538,7 +556,7 @@ export class View {
 
     private drawObject10(): string {
         let scale: number[] = [10, 20, -35]
-        let color: number[] = [153 / 255, 217 / 255, 234 / 255]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -553,7 +571,7 @@ export class View {
     
     private drawObject11(): string {
         let scale: number[] = [10, 20, -15]
-        let color: number[] = [1, 0, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -594,7 +612,7 @@ export class View {
 
     private drawObject14(): string {
         let scale: number[] = [10, 20, -35]
-        let color: number[] = [153 / 255, 217 / 255, 234 / 255]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -635,7 +653,7 @@ export class View {
 
     private drawObject17(): string {
         let scale: number[] = [36, 20, -10]
-        let color: number[] = [1, 0, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -650,7 +668,7 @@ export class View {
 
     private drawObject18(): string {
         let scale: number[] = [20, 20, -10]
-        let color: number[] = [1, 0, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -667,7 +685,7 @@ export class View {
         let cylinderScale: number[] = [25, 40, -25]
         let cylinderColor: number[] = [1, 1, 1]
         let coneScale: number[] = [25, 50, -25]
-        let coneColor: number[] = [170 / 255, 130 / 255, 51 / 255]
+        let coneColor: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -682,7 +700,7 @@ export class View {
 
     private drawObject20(): string {
         let scale: number[] = [20, 20, -10]
-        let color: number[] = [1, 0, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -723,7 +741,7 @@ export class View {
     
     private drawObject23(): string {
         let scale: number[] = [10, 20, -15]
-        let color: number[] = [1, 0, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -738,7 +756,7 @@ export class View {
 
     private drawObject24(): string {
         let scale: number[] = [5, 20, -10]
-        let color: number[] = [1, 0, 0]
+        let color: number[] = [1, 1, 1]
         return `
             {
                 "type":"transform",
@@ -757,11 +775,11 @@ export class View {
 
     private drawObject1Type(objNum: number): string {
         let boxScale: number[] = [10,50, -10]
-        let boxColor: number[] = [0.5, 0.5, 0.5]
+        let boxColor: number[] = [1, 1, 1]
         let cylinderScale: number[] = [10, 5, -10]
         let cylinderColor: number[] = [1, 1, 1]
         let coneScale: number[] = [10, 10, -10]
-        let coneColor: number[] = [170 / 255, 130 / 255, 51 / 255]
+        let coneColor: number[] = [1, 1, 1]
         return this.boxPlusMinaret(boxScale, boxColor, cylinderScale, cylinderColor, coneScale, coneColor, objNum);
     }
 
@@ -785,17 +803,17 @@ export class View {
 
     private object5(): string {
         let baseScale: number[] = [25, 20, -25]
-        let baseColor: number[] = [0.5, 0.5, 0.5]
+        let baseColor: number[] = [1, 1, 1]
         let towerScale: number[] = [22, 25, -22]
-        let towerColor: number[] = [1, 0, 0]
+        let towerColor: number[] = [1, 1, 1]
         let bigMinCylScale: number[] = [20, 40, -20]
         let bigMinCylColor: number[] = [1, 1, 1]
         let bigMinConeScale: number[] = [20, 20, -20]
-        let bigMinConeColor: number[] = [1, 0, 1]
+        let bigMinConeColor: number[] = [1, 1, 1]
         let smallMinCylScale: number[] = [8, 30, -8]
-        let smallMinCylColor: number[] = [0.5, 0.5, 0.5]
+        let smallMinCylColor: number[] = [1, 1, 1]
         let smallMinConeScale: number[] = [8, 10, -8]
-        let smallMinConeColor: number[] = [1, 0, 1]
+        let smallMinConeColor: number[] = [1, 1, 1]
         return `
         {
             "type":"group",
@@ -809,7 +827,7 @@ export class View {
                     "child": 
                     {
                         "type":"group",
-                        "children":[${this.objectJson("cylinder", towerScale, towerColor, 5)},
+                        "children":[${this.objectJson("cylinder", towerScale, towerColor, 5, "wall")},
                         {
                             "type":"transform",
                             "name":"mainMinaret-obj5",
@@ -861,22 +879,32 @@ export class View {
     private drawMinaret(cylinderScale: number[], cylinderColor: number[], coneScale: number[], coneColor: number[], objNum: number): string {
         return `{
             "type":"group",
-            "children":[${this.objectJson("cylinder", cylinderScale, cylinderColor, objNum)},
+            "children":[${this.objectJson("cylinder", cylinderScale, cylinderColor, objNum, "wall")},
                 {
                     "type":"transform",
                     "name":"cone-obj${objNum}",
                     "transform":[
                         {"translate":[0,${cylinderScale[1]},0]}
                     ],
-                    "child": ${this.objectJson("cone", coneScale, coneColor, objNum)}
+                    "child": ${this.objectJson("cone", coneScale, coneColor, objNum, "roof")}
+                    
                 }
             ]
         }`
     }
 
-    private objectJson (type: string, scale: number[], color: number[], objNum: number): string {
+    private objectJson (type: string, scale: number[], color: number[], objNum: number, texture?: string): string {
         let normalizeCenter = 0.25;
         let normalizeYscale = 2
+        let textureString: string = ""
+        if (texture) {
+            textureString = `"texture": "${texture}",`
+        } else{
+            if (type === "box") {
+                textureString = `"texture": "wall2",`
+            }
+        }
+
         if (type === "box") {
             normalizeCenter = 0.5
             normalizeYscale = 1
@@ -891,6 +919,7 @@ export class View {
             "child": {
                     "type":"object",
                     "instanceof":"${type}",
+                    ${textureString}
                     "material": {
                         "ambient":[${color[0] / 1.5}, ${color[1] / 1.5}, ${color[2] / 1.5}],
                         "specular":[${color[0]}, ${color[1]}, ${color[2]}],

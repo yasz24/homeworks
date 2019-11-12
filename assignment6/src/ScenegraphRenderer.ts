@@ -28,7 +28,7 @@ export class ScenegraphRenderer {
      * 
      * A map to store all the textures
      */
-    protected textures: Map<string, WebGLTexture>;
+    protected textures: Map<string, TextureObject>;
     /**
      * A table of renderers for individual meshes
      */
@@ -40,6 +40,7 @@ export class ScenegraphRenderer {
         this.shaderVarsToVertexAttribs = shaderVarsToAttribs;
         this.meshRenderers = new Map<String, RenderableMesh<IVertexData>>();
         this.shaderLocations = shaderLocations;
+        this.textures = new Map<string, TextureObject>();
     }
 
 
@@ -72,11 +73,8 @@ export class ScenegraphRenderer {
     }
 
     public addTexture(name: string, path: string): void {
-        let image: WebGLTexture;
-        let imageFormat: string = path.substring(path.indexOf('.') + 1);
-        image = WebGLUtils.loadTexture(this.gl, path);
-
-        this.textures.set(name, image);
+        let texObj: TextureObject = new TextureObject(this.gl, name, path);
+        this.textures[name] = texObj;
     }
 
     /**
@@ -108,13 +106,15 @@ export class ScenegraphRenderer {
     public drawMesh(meshName: string, material: Material, textureName: string, transformation: mat4) {
         //console.log("Mesh name: " + meshName);
         if (this.meshRenderers.has(meshName)) {
-            //get the color
+            // this.gl.enable(this.gl.TEXTURE_2D);
+            //deal with texture 0
+            this.gl.activeTexture(this.gl.TEXTURE0);
+            //that is what we pass to the shader
+            this.gl.uniform1i(this.shaderLocations.getUniformLocation("image"), 0);
 
-            // let loc: WebGLUniformLocation = this.shaderLocations.getUniformLocation("vColor");
-            // //set the color for all vertices to be drawn for this object
-            // let color: vec4 = vec4.fromValues(material.getAmbient()[0], material.getAmbient()[1], material.getAmbient()[2], 1);
-            // this.gl.uniform4fv(loc, color);
-            //console.log(material);
+            this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("texturematrix"), false, mat4.create());
+
+
             //send material to the shader
             this.gl.uniform3fv(this.shaderLocations.getUniformLocation("material.ambient"), material.getAmbient());
             this.gl.uniform3fv(this.shaderLocations.getUniformLocation("material.diffuse"), material.getDiffuse());
@@ -130,6 +130,21 @@ export class ScenegraphRenderer {
             mat4.invert(normalMatrix, normalMatrix);
 
             this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("normalmatrix"), false, normalMatrix);
+            
+            //bind the appropriate texture
+            //console.log(textureName);
+            // console.log(this.textures["white"]);
+            // console.log(this.textures);
+            //textureName = "wall";
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[textureName].getTextureID());
+
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+
+            // Prevents s-coordinate wrapping (repeating).
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+            // Prevents t-coordinate wrapping (repeating).
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
 
             //send the texture matrix
             //this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("texturematrix"), false, mat4.create());

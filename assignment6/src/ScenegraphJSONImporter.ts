@@ -96,7 +96,6 @@ export namespace ScenegraphJSONImporter {
                 }
                 result.addLight(light);
             }
-            console.log(result.getLights());
         }
         return result;
     }
@@ -190,6 +189,8 @@ export namespace ScenegraphJSONImporter {
 
         if ("texture" in obj) {
             result.setTextureName(obj["texture"]);
+        } else {
+            result.setTextureName("white");
         }
 
         if ("material" in obj) {
