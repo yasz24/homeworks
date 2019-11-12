@@ -213,7 +213,11 @@ export class View {
                 },
                 {
                     "name": "wall2",
-                    "path": "textures/gray-wall-bricks-161945-1.jpg"
+                    "path": "textures/wall-bricks-220182Side.jpg"
+                },
+                {
+                    "name": "wall3",
+                    "path": "textures/wall-bricks-220182Dark.jpg"
                 },
                 {
                     "name": "white",
@@ -457,7 +461,7 @@ export class View {
                 "transform":[
                     {"translate":[12.5,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 3)}
+                "child": ${this.objectJson("box",scale, color, 3, "wall3")}
             }
         ` 
     }
@@ -472,7 +476,7 @@ export class View {
                 "transform":[
                     {"translate":[30,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 4)}
+                "child": ${this.objectJson("box",scale, color, 4, "wall3")}
             }
         ` 
     }
@@ -500,7 +504,7 @@ export class View {
                 "transform":[
                     {"translate":[50,0,-50]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 6)}
+                "child": ${this.objectJson("box",scale, color, 6, "wall3")}
             }
         ` 
     }
@@ -515,7 +519,7 @@ export class View {
                 "transform":[
                     {"translate":[47.5,0,-35]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 7)}
+                "child": ${this.objectJson("box",scale, color, 7, "wall3")}
             }
         ` 
     }
@@ -549,7 +553,7 @@ export class View {
                 "transform":[
                     {"translate":[32.5,0,-5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 9)}
+                "child": ${this.objectJson("box",scale, color, 9, "wall3")}
             }
         ` 
     }
@@ -564,7 +568,7 @@ export class View {
                 "transform":[
                     {"translate":[60,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 10)}
+                "child": ${this.objectJson("box",scale, color, 10, "wall3")}
             }
         ` 
     }
@@ -579,7 +583,7 @@ export class View {
                 "transform":[
                     {"translate":[70,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 11)}
+                "child": ${this.objectJson("box",scale, color, 11, "wall3")}
             }
         ` 
     }
@@ -620,7 +624,7 @@ export class View {
                 "transform":[
                     {"translate":[80,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 14)}
+                "child": ${this.objectJson("box",scale, color, 14, "wall3")}
             }
         ` 
     }
@@ -661,7 +665,7 @@ export class View {
                 "transform":[
                     {"translate":[103,0,-27]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 17)}
+                "child": ${this.objectJson("box",scale, color, 17, "wall3")}
             }
         ` 
     }
@@ -676,7 +680,7 @@ export class View {
                 "transform":[
                     {"translate":[95,0,-50]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 18)}
+                "child": ${this.objectJson("box",scale, color, 18, "wall3")}
             }
         ` 
     }
@@ -708,7 +712,7 @@ export class View {
                 "transform":[
                     {"translate":[131,0,-50]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 20)}
+                "child": ${this.objectJson("box",scale, color, 20, "wall3")}
             }
         ` 
     }
@@ -749,7 +753,7 @@ export class View {
                 "transform":[
                     {"translate":[136,0,-29.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 23)}
+                "child": ${this.objectJson("box",scale, color, 23, "wall3")}
             }
         ` 
     }
@@ -764,7 +768,7 @@ export class View {
                 "transform":[
                     {"translate":[12.5,0,-5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 24)}
+                "child": ${this.objectJson("box",scale, color, 24, "wall3")}
             }
         ` 
     }
@@ -788,7 +792,7 @@ export class View {
         return `
         {
             "type":"group",
-            "children":[${this.objectJson("box", boxScale, boxColor, objNum)},
+            "children":[${this.objectJson("box", boxScale, boxColor, objNum, "wall2")},
                 {
                     "type":"transform",
                     "name":"cylinder-obj${objNum}",
@@ -817,7 +821,7 @@ export class View {
         return `
         {
             "type":"group",
-            "children":[${this.objectJson("box", baseScale, baseColor, 5)},
+            "children":[${this.objectJson("box", baseScale, baseColor, 5, "wall3")},
                 {
                     "type":"transform",
                     "name":"cylinder-obj5",
@@ -899,10 +903,6 @@ export class View {
         let textureString: string = ""
         if (texture) {
             textureString = `"texture": "${texture}",`
-        } else{
-            if (type === "box") {
-                textureString = `"texture": "wall2",`
-            }
         }
 
         if (type === "box") {
