@@ -15,7 +15,6 @@ import { SGNode } from "SGNode";
 import { Material } from "%COMMON/Material";
 import { GroupNode } from "./GroupNode";
 import { PlaneAttributesImporter, PlaneAttributes } from "./planeAttribsParse";
-import { TextureObject } from "%COMMON/TextureObject" 
 
 
 enum ViewType {
@@ -54,14 +53,11 @@ export class View {
     private planeAttribs: PlaneAttributes; 
     private numPlanePositions: number;
 
-    private textureMap: Map<string, TextureObject>; 
-
     constructor(gl: WebGLRenderingContext) {
         this.gl = gl;
         this.time = 0;
         this.modelview = new Stack<mat4>();
         this.scenegraph = null;
-        this.textureMap = new Map();
         //set the clear color
         this.gl.clearColor(0.9, 0.9, 0.7, 1);
 
