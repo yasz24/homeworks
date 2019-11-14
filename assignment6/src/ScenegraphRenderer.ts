@@ -138,7 +138,7 @@ export class ScenegraphRenderer {
             //textureName = "wall";
             this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[textureName].getTextureID());
 
-            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
 
             // Prevents s-coordinate wrapping (repeating).
