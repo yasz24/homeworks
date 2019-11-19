@@ -5,6 +5,7 @@ import { Stack } from "%COMMON/Stack";
 import { ScenegraphRenderer } from "./ScenegraphRenderer";
 import { IVertexData } from "%COMMON/IVertexData";
 import { Light } from "%COMMON/Light";
+import { HitRecord, Ray } from "RayTraceSolver";
 
 /**
  * This node represents a transformation in the scene graph. It has only one child. The 
@@ -130,6 +131,18 @@ export class TransformNode extends SGNode {
         res = res.concat(this.child.findLights(modelView));
         modelView.pop();
         return res
+    }
+
+    public rayIntersect(ray: Ray, modelView: Stack<mat4>): HitRecord | undefined {
+        modelView.push(mat4.clone(modelView.peek()));
+        mat4.multiply(modelView.peek(), modelView.peek(), this.animationTransform);
+        mat4.multiply(modelView.peek(), modelView.peek(), this.transform);
+        let hitRecord: HitRecord | undefined = undefined;
+        if (this.child != null) {
+            hitRecord = this.child.rayIntersect(ray, modelView);
+        }
+        modelView.pop();
+        return hitRecord
     }
 
 

@@ -5,6 +5,8 @@ import { ScenegraphRenderer } from "ScenegraphRenderer";
 import { Material } from "%COMMON/Material";
 import { IVertexData } from "%COMMON/IVertexData";
 import { Light } from "%COMMON/Light";
+import { HitRecord, Ray } from "RayTraceSolver";
+
 /**
  * This class represents a basic node of a scene graph.
  */
@@ -81,6 +83,7 @@ export abstract class SGNode {
 
     public abstract draw(context: ScenegraphRenderer, modelView: Stack<mat4>): void;
     public abstract findLights(modelView: Stack<mat4>): Light[];
+    public abstract rayIntersect(ray: Ray, modelview: Stack<mat4>): HitRecord | undefined;
     public abstract clone(): SGNode;
     public setTransform(transform: mat4): void {
         throw new Error("Not supported");

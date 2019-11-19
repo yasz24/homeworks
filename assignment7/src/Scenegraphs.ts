@@ -1,6 +1,7 @@
 import { View } from "./View"
 import * as WebGLUtils from "%COMMON/WebGLUtils"
 import { Controller } from "./Controller";
+import { RTView } from "./RTView";
 
 var numFrames: number = 0;
 var lastTime: number = -1;
@@ -48,7 +49,7 @@ function main(): void {
                 let currentTime: number = new Date().getTime();
                 let frameRate: number = 1000 * numFrames / (currentTime - lastTime);
                 lastTime = currentTime;
-                document.getElementById('frameratedisplay').innerHTML = "Frame rate: " + frameRate.toFixed(1);
+                //document.getElementById('frameratedisplay').innerHTML = "Frame rate: " + frameRate.toFixed(1);
                 numFrames = 0;
             }
             view.animate();
@@ -57,6 +58,10 @@ function main(): void {
             //this line sets up the animation
             requestAnimationFrame(tick);
         };
+
+         //set up the ray tracer view
+        let raytracerView: RTView = new RTView();
+        raytracerView.fillCanvas();
 
         //call tick the first time
         tick();

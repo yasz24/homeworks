@@ -3,9 +3,10 @@ import { Scenegraph } from "./Scenegraph";
 import { Material } from "%COMMON/Material";
 import { Stack } from "%COMMON/Stack";
 import { ScenegraphRenderer } from "./ScenegraphRenderer";
-import { mat4 } from "gl-matrix";
+import { mat4, vec4 } from "gl-matrix";
 import { IVertexData } from "%COMMON/IVertexData";
 import { Light } from "%COMMON/Light";
+import { HitRecord, Ray } from "RayTraceSolver";
 
 /**
  * This node represents the leaf of a scene graph. It is the only type of node that has
@@ -92,5 +93,29 @@ export class LeafNode extends SGNode {
         // if (!(acc.length >= accInLen)) {
         //     console.log("problem");
         // }
+    }
+
+    public rayIntersect(ray: Ray, modelView: Stack<mat4>): HitRecord | undefined {
+        let rayPos: vec4 = vec4.create();
+        vec4.transformMat4(rayPos, ray.startPoint, mat4.invert(mat4.create(), modelView.peek()));
+        let rayDir: vec4 = vec4.create();
+        vec4.transformMat4(rayDir, ray.direction, mat4.invert(mat4.create(), modelView.peek()));
+        let objectRay: Ray = {
+            startPoint: rayPos,
+            direction: rayDir
+        } 
+        switch (this.meshName) {
+            case "box":
+                return this.boxIntersect(objectRay);
+            case "sphere":
+                return this.sphereIntersect(objectRay);
+            default:
+                return undefined
+        }
+    }
+
+
+    private boxIntersect(ray: Ray): HitRecord | undefined {
+        
     }
 }

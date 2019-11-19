@@ -5,6 +5,7 @@ import { Stack } from "%COMMON/Stack";
 import { mat4 } from "gl-matrix";
 import { IVertexData } from "%COMMON/IVertexData";
 import { Light } from "%COMMON/Light";
+import { HitRecord, Ray } from "RayTraceSolver";
 
 /**
  * This class represents a group node in the scenegraph. A group node is simply a logical grouping
@@ -79,6 +80,30 @@ export class GroupNode extends SGNode {
         // // }
         this.children.forEach(child => res = res.concat(child.findLights(modelView)));
         return res
+    }
+
+    public rayIntersect(ray: Ray, modelview: Stack<mat4>): HitRecord | undefined {
+        interface FavoriteChild {
+            time: number,
+            hitRecord: HitRecord | undefined
+        }
+
+        let favoriteChild: FavoriteChild = {
+            time: Number.MAX_VALUE,
+            hitRecord: undefined
+        }
+
+        for (const child of this.children) {
+            let hitrecord: HitRecord | undefined = child.rayIntersect(ray, modelview)
+            if (hitrecord && hitrecord.time < favoriteChild.time) {
+                favoriteChild = {
+                    time: hitrecord.time,
+                    hitRecord: hitrecord
+                }
+            }
+        }
+
+        return favoriteChild.hitRecord
     }
 
     /**

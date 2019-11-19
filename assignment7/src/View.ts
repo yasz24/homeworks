@@ -71,25 +71,25 @@ export class View {
         this.radius = 100;
         this.viewType = ViewType.Front;
         let self = this;
-        document.addEventListener("keydown", function(event){
-            switch (event.key) {
-                case 't':
-                    self.viewType =  ViewType.TurnTable
-                    break;
-                case 'f':
-                    self.viewType =  ViewType.Front
-                    break;
-                case 'o':
-                    self.viewType =  ViewType.BirdsEye
-                    break;
-                case 'a':
-                    self.viewType =  ViewType.CockPit
-                    break;
-                default:
-                    break;
+        // document.addEventListener("keydown", function(event){
+        //     switch (event.key) {
+        //         case 't':
+        //             self.viewType =  ViewType.TurnTable
+        //             break;
+        //         case 'f':
+        //             self.viewType =  ViewType.Front
+        //             break;
+        //         case 'o':
+        //             self.viewType =  ViewType.BirdsEye
+        //             break;
+        //         case 'a':
+        //             self.viewType =  ViewType.CockPit
+        //             break;
+        //         default:
+        //             break;
                 
-            }
-        } );
+        //     }
+        // } );
     }
 
 
@@ -188,18 +188,6 @@ export class View {
                 {
                     "name":"box",
                     "path":"models/box.obj"
-                },
-                {
-                    "name":"cylinder",
-                    "path":"models/cylinder.obj"
-                },
-                {
-                    "name":"cone",
-                    "path":"models/cone.obj"
-                },
-                {
-                    "name":"plane",
-                    "path":"models/aeroplane.obj"
                 }
             ],
             "images": [
@@ -289,27 +277,9 @@ export class View {
                         "spotcutoff": 180.0
                       }
                   ],
-                "children":[${this.drawObject1()}, ${this.drawObject2()}, ${this.drawObject3()}, 
-                    ${this.drawObject4()}, ${this.drawObject5()}, ${this.drawObject6()}, 
-                    ${this.drawObject7()}, 
-                    ${this.drawObject8()},
-                    ${this.drawObject9()},
-                    ${this.drawObject10()},
-                    ${this.drawObject11()},
-                    ${this.drawObject12()},
-                    ${this.drawObject13()},
-                    ${this.drawObject14()},
-                    ${this.drawObject15()},
-                    ${this.drawObject16()},
-                    ${this.drawObject17()},
-                    ${this.drawObject18()},
-                    ${this.drawObject19()},
-                    ${this.drawObject20()},
-                    ${this.drawObject21()},
-                    ${this.drawObject22()},
-                    ${this.drawObject23()},
-                    ${this.drawObject24()},
-                    ${this.drawPlane()}]
+                "children":[
+                    ${this.objectJson("box", [30, 30, 30], [1,0,0], 1)}
+                ]
 
             }
         }
@@ -1121,13 +1091,12 @@ export class View {
     public animate(): void {
         this.time += 1;
         if (this.scenegraph != null) {
-            this.scenegraph.animate(this.time, this.planeAttribs, this.numPlanePositions, this.generateLookAtMatrix(false));
+            this.scenegraph.animate(this.time, null, this.numPlanePositions, this.generateLookAtMatrix(false));
         }
         this.draw();
     }
 
     public draw(): void {
-
         this.gl.clearColor(0, 0, 0, 1);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         this.gl.enable(this.gl.DEPTH_TEST);
@@ -1148,24 +1117,9 @@ export class View {
          */
         this.modelview.push(mat4.create());
         this.modelview.push(mat4.clone(this.modelview.peek()));
-        switch (this.viewType) {
-            case ViewType.TurnTable:
-                    mat4.lookAt(this.modelview.peek(), vec3.fromValues(80 + (this.radius * Math.sin(this.time * 0.01)), 140, -27.5 + this.radius * Math.cos(this.time * 0.01)),
-                    vec3.fromValues(80, 20, -27.5), vec3.fromValues(0, 1, 0));
-                    break;
-            case ViewType.BirdsEye:
-                    mat4.lookAt(this.modelview.peek(), vec3.fromValues(80, 175, -27.5), vec3.fromValues(80, 0, -27.5), vec3.fromValues(0, 0, -1));
-                    break;
-            case ViewType.Front:
-                    mat4.lookAt(this.modelview.peek(), vec3.fromValues(80, 90, 60), vec3.fromValues(60, 20, -27.5), vec3.fromValues(0, 1, 0));
-                    break;
-            case ViewType.CockPit:
-                    mat4.multiply(this.modelview.peek(), this.generateLookAtMatrix(true), this.modelview.peek());
-                    break
-            default:
-                    mat4.lookAt(this.modelview.peek(), vec3.fromValues(100, 150, 160), vec3.fromValues(80, 20, -27.5), vec3.fromValues(0, 1, 0));
-                    break;
-        }
+
+        mat4.lookAt(this.modelview.peek(), vec3.fromValues(0, 0, 50), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
+        
 
         let lights = this.scenegraph.findLights(this.modelview);
 

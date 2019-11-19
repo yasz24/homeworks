@@ -6,6 +6,7 @@ import { mat4, glMatrix, vec3 } from "gl-matrix";
 import { Stack } from "%COMMON/Stack";
 import { PlaneAttributes } from "planeAttribsParse";
 import { Light } from "%COMMON/Light";
+import { HitRecord, Ray } from "RayTraceSolver";
 
 /**
  * A specific implementation of this scene graph. This implementation is still independent
@@ -95,6 +96,10 @@ export class Scenegraph<VertexType extends IVertexData> {
         //let res: Light[] = this.root.findLights(modelView);
         //console.log(res);
         return this.root.findLights(modelView);
+    }
+
+    public rayIntersect(ray: Ray, modelview: Stack<mat4>): HitRecord {
+        this.root.rayIntersect(ray, modelview)
     }
 
     public addPolygonMesh(meshName: string, mesh: Mesh.PolygonMesh<VertexType>): void {
