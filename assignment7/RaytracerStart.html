@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/png" href="out/webgl.jpg" />
+    <meta charset="utf-8" />
+    <!-- the script tag below links to the main js file. This js file will have the main function. We also require require.js to load in exported classes and interfaces from other files-->
+
+    <!--Paste the style code below in your project -->
+    <style>
+        .division {
+            float: left;
+        }
+
+        section:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+
+    <title>Hello WebGL!</title>
+</head>
+
+<body>
+    <!--All the rendering happens in a canvas. In Typescript we will create a rendering context from this canvas that supports WebGL-->
+    <section>
+        <div style="float:left">
+            <canvas id="glCanvas" width="400" height="400">
+                Please use a browser that supports "canvas"
+            </canvas>
+        </div>
+        <div style="float:left">
+            <canvas style="background-color:blue" id="raytraceCanvas" width="400" height="400">
+                Please use a browser that supports "canvas"
+            </canvas>
+            <input type="button" id="savebutton" value="Save to result.png" />
+        </div>
+    </section>
+
+    <script src="out/Scenegraphs.js"></script>
+</body>
+
+</html>
