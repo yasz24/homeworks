@@ -151,14 +151,20 @@ export class LeafNode extends SGNode {
         let t1: number = Math.max(Math.min(x1, x2), Math.min(y1, y2), Math.min(z1, z2))
         let t2: number = Math.min(Math.max(x1, x2), Math.max(y1, y2), Math.max(z1, z2))
 
+        if (t1 < 0 && t2 < 0) {
+            return undefined;
+        }
+
         if (t1 <= t2) {
+            //TODO: fudge the numbers so you don't intersect with objects too close.
             let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, t1));
             let nx: number = intersectionPoint[0] == 0.5 ? 1 : intersectionPoint[0] == -0.5 ? -1 : 0;
             let ny: number = intersectionPoint[1] == 0.5 ? 1 : intersectionPoint[1] == -0.5 ? -1 : 0;
             let nz: number = intersectionPoint[2] == 0.5 ? 1 : intersectionPoint[2] == -0.5 ? -1 : 0;
             let normal: vec4 = vec4.fromValues(nx, ny, nz, 0);
+            let time: number = t1 > 0 ? t1 : t2; 
             let hitrecord: HitRecord = {
-                time: t1,
+                time: time,
                 intersectionPoint: intersectionPoint,
                 material: this.material,
                 normal: normal
@@ -183,7 +189,12 @@ export class LeafNode extends SGNode {
             return undefined;
         }
         else {
-            let time: number = (-B - discriminant) / (2 * A);
+            let t1: number = (-B - discriminant) / (2 * A);
+            let t2: number = (-B + discriminant) / (2 * A);
+            if (t1 < 0 && t2 < 0) {
+                return undefined;
+            }
+            let time: number = t1 > 0 ? t1 : t2; 
             let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, time));
             let normal: vec4 = vec4.fromValues(intersectionPoint[0], intersectionPoint[1], intersectionPoint[2], 0);
             let hitrecord: HitRecord = {

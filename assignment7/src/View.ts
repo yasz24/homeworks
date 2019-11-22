@@ -286,7 +286,7 @@ export class View {
                       }
                   ],
                 "children":[
-                    ${this.objectJson("box", [50, 20, 50], [1,0,0], 1)}
+                    ${this.objectJson("box", [20, 20, 20], [1,0,0], 1)}
                 ]
 
             }

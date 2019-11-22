@@ -43,25 +43,31 @@ export class RayTraceSolver {
                 pixel[y][x] = this.rayCast(ray, modelview);
             }
         }
-        return pixel
+        pixel.reverse();
+        return pixel;
     }
 
     private rayCast(ray: Ray, modelview: Stack<mat4>): vec3 {
         let hitRecord: HitRecord | undefined = this.scenegraph.rayIntersect(ray, modelview);
-        if (hitRecord === undefined) {
-            console.log(hitRecord);
-        }
+        // if (hitRecord === undefined) {
+        //     console.log(hitRecord);
+        // }
         if (hitRecord) {
-            if (hitRecord === undefined) {
-                console.log("here");
-            }
-            if (hitRecord.time > 0) {
-                console.log(hitRecord);
-            }
+            //console.log(hitRecord.time);
+            // if (hitRecord === undefined) {
+            //     console.log("here");
+            // }
+            // if (hitRecord.time > 0) {
+            //     console.log(hitRecord);
+            // }
             let color: vec3 = vec3.fromValues(0, 1, 0);
             return color;
         }
         return vec3.fromValues(0, 0, 0);
+    }
+
+    private shade(hitRecord: HitRecord) {
+        
     }
 }
 
