@@ -192,11 +192,15 @@ export class LeafNode extends SGNode {
             let t1: number = (-B - discriminant) / (2 * A);
             let t2: number = (-B + discriminant) / (2 * A);
             if (t1 < 0 && t2 < 0) {
-                return undefined;
+               return undefined;
             }
-            let time: number = t1 > 0 ? t1 : t2; 
+            let time: number = t1 > 0 ? t1 : t2;
             let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, time));
             let normal: vec4 = vec4.fromValues(intersectionPoint[0], intersectionPoint[1], intersectionPoint[2], 0);
+            // if (normal[0] === 0 && normal[1] === 0) {
+            //     console.log("at camera");
+            // }
+
             let hitrecord: HitRecord = {
                 time: time,
                 intersectionPoint: intersectionPoint,

@@ -225,36 +225,6 @@ export class View {
                 "type":"group",
                 "lights": [
                     {
-                      "ambient": [
-                        0.4,
-                        0.4,
-                        0.4
-                      ],
-                      "diffuse": [
-                        0.4,
-                        0.4,
-                        0.4
-                      ],
-                      "specular": [
-                        0.4,
-                        0.4,
-                        0.4
-                      ],
-                      "position": [
-                        0.0,
-                        100.0,
-                        -27.5,
-                        1.0
-                      ],
-                      "spotdirection": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "spotcutoff": 180.0
-                    },
-                    {
                         "ambient": [
                           0.4,
                           0.4,
@@ -271,28 +241,60 @@ export class View {
                           0.4
                         ],
                         "position": [
-                          80.0, 
-                          175.0, 
-                          -27.5,
+                          0.0, 
+                          0.0, 
+                          60,
                           1.0
                         ],
                         "spotdirection": [
                           0.0,
                           0.0,
-                          0.0,
+                          -1.0,
                           0.0
                         ],
                         "spotcutoff": 180.0
                       }
                   ],
                 "children":[
-                    ${this.objectJson("box", [20, 20, 20], [1,0,0], 1)}
+                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1)}
                 ]
 
             }
         }
         `;
         
+        /*
+        {
+                      "ambient": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "diffuse": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "specular": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "position": [
+                        0.0,
+                        60.0,
+                        0.0,
+                        1.0
+                      ],
+                      "spotdirection": [
+                        0.0,
+                        -1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "spotcutoff": 180.0
+                    },
+        */
 
     }
 
@@ -1125,9 +1127,8 @@ export class View {
          */
         this.modelview.push(mat4.create());
         this.modelview.push(mat4.clone(this.modelview.peek()));
-
-        mat4.lookAt(this.modelview.peek(), vec3.fromValues(0, 0, 50), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
         
+        mat4.lookAt(this.modelview.peek(), vec3.fromValues(0, 30, 50), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
 
         let lights = this.scenegraph.findLights(this.modelview);
 

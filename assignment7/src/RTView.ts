@@ -29,10 +29,10 @@ export class RTView {
         let width: number = Number(this.canvas.getAttribute("width"));
         let height: number = Number(this.canvas.getAttribute("height"));
         let imageData: ImageData = this.canvas.getContext('2d').createImageData(width, height);
-        let rayTraceSolver: RayTraceSolver = new RayTraceSolver(scenegraph);
         let stack: Stack<mat4> = new Stack();
         stack.push(mat4.create());
         mat4.lookAt(stack.peek(), vec3.fromValues(0, 0, 50), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
+        let rayTraceSolver: RayTraceSolver = new RayTraceSolver(scenegraph, stack);
         let pixels: vec3[][] = rayTraceSolver.rayTrace(width, height, stack);
 
         for (let i: number = 0; i < height; i++) {
