@@ -104,6 +104,11 @@ export class View {
 
     }
 
+    public getScenegraph() {
+        console.log(this.scenegraph);
+        return this.scenegraph;
+    }
+
     public initScenegraph(): Promise<void> {
 
         //make scene graph programmatically
@@ -163,6 +168,7 @@ export class View {
                 shaderVarsToVertexAttribs.set("vTexCoord", "texcoord");
                 let renderer: ScenegraphRenderer = new ScenegraphRenderer(this.gl, this.shaderLocations, shaderVarsToVertexAttribs);
                 this.scenegraph = s;
+                console.log(this.scenegraph);
                 this.scenegraph.setRenderer(renderer);
                 resolve(undefined);
             });
@@ -280,7 +286,7 @@ export class View {
                       }
                   ],
                 "children":[
-                    ${this.objectJson("box", [30, 30, 30], [1,0,0], 1)}
+                    ${this.objectJson("box", [50, 20, 50], [1,0,0], 1)}
                 ]
 
             }

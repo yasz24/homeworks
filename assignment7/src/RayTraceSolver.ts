@@ -23,7 +23,7 @@ export class RayTraceSolver {
     private readonly fov: number = Math.PI / 2;
     
     public constructor(scenegraph: Scenegraph<VertexPNT>) {
-
+        this.scenegraph = scenegraph;
     }
     public rayTrace(width: number, height: number, modelview: Stack<mat4>): vec3[][] {
         let pixel: vec3[][] = []
@@ -39,6 +39,7 @@ export class RayTraceSolver {
                     startPoint: vec4.fromValues(0, 0, 0, 1),
                     direction: vec4.fromValues(x - (width / 2), y - (height / 2), -distToProjPlane, 0)
                 }
+                //console.log(ray.direction);
                 pixel[y][x] = this.rayCast(ray, modelview);
             }
         }
@@ -47,8 +48,17 @@ export class RayTraceSolver {
 
     private rayCast(ray: Ray, modelview: Stack<mat4>): vec3 {
         let hitRecord: HitRecord | undefined = this.scenegraph.rayIntersect(ray, modelview);
+        if (hitRecord === undefined) {
+            console.log(hitRecord);
+        }
         if (hitRecord) {
-            let color: vec3 = vec3.fromValues(1, 1, 1);
+            if (hitRecord === undefined) {
+                console.log("here");
+            }
+            if (hitRecord.time > 0) {
+                console.log(hitRecord);
+            }
+            let color: vec3 = vec3.fromValues(0, 1, 0);
             return color;
         }
         return vec3.fromValues(0, 0, 0);

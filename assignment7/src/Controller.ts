@@ -2,6 +2,7 @@ import { View } from "View"
 import { mat4 } from "gl-matrix"
 import { Material } from "%COMMON/Material"
 import { RTView } from "RTView";
+import { RayTraceSolver } from "RayTraceSolver";
 
 export interface Features {
 }
@@ -17,7 +18,11 @@ export class Controller implements Features {
 
     public go(): void {
         this.view.initShaders(this.getPhongVShaderV2(), this.getPhongFShaderV2(5));
-        this.view.initScenegraph();
+        this.view.initScenegraph().then(() => {
+            let scenegraph = this.view.getScenegraph();
+            this.rtView.fillCanvas(scenegraph);
+
+        });
         this.view.initPlaneAttribs();
         this.view.draw();
     }

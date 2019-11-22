@@ -1,5 +1,8 @@
-import { vec3 } from "gl-matrix";
-import { RayTraceSolver } from "RayTraceSolver";
+import { vec3, mat4 } from "gl-matrix";
+import { RayTraceSolver } from "./RayTraceSolver";
+import { Scenegraph } from "./Scenegraph";
+import { VertexPNT } from "./VertexPNT";
+import { Stack } from "%COMMON/Stack";
 
 export class RTView {
     private canvas: HTMLCanvasElement;
@@ -21,16 +24,25 @@ export class RTView {
         link.click();
     }
 
-    public fillCanvas(pixels: vec3[][]): void {
+    public fillCanvas(scenegraph: Scenegraph<VertexPNT>): void {
+        console.log(scenegraph);
         let width: number = Number(this.canvas.getAttribute("width"));
         let height: number = Number(this.canvas.getAttribute("height"));
         let imageData: ImageData = this.canvas.getContext('2d').createImageData(width, height);
+        let rayTraceSolver: RayTraceSolver = new RayTraceSolver(scenegraph);
+        let stack: Stack<mat4> = new Stack();
+        stack.push(mat4.create());
+        let pixels: vec3[][] = rayTraceSolver.rayTrace(width, height, stack);
 
         for (let i: number = 0; i < height; i++) {
             for (let j: number = 0; j < width; j++) {
-                imageData.data[4 * (i * width + j)] = pixels[i][j][0];
-                imageData.data[4 * (i * width + j) + 1] = pixels[i][j][1];
-                imageData.data[4 * (i * width + j) + 2] = pixels[i][j][2];
+                // if (pixels[i][j][0] === 0 && pixels[i][j][1] === 1 && pixels[i][j][2] === 0) {
+                //     console.log("green");
+                // }
+
+                imageData.data[4 * (i * width + j)] = 255 * pixels[i][j][0];
+                imageData.data[4 * (i * width + j) + 1] = 255 * pixels[i][j][1];
+                imageData.data[4 * (i * width + j) + 2] = 255 * pixels[i][j][2];
                 imageData.data[4 * (i * width + j) + 3] = 255;
             }
         }
