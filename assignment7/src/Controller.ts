@@ -1,14 +1,17 @@
 import { View } from "View"
 import { mat4 } from "gl-matrix"
 import { Material } from "%COMMON/Material"
+import { RTView } from "RTView";
 
 export interface Features {
 }
 export class Controller implements Features {
     private view: View;
+    private rtView: RTView;
 
-    constructor(view: View) {
+    constructor(view: View, rtView?: RTView) {
         this.view = view;
+        this.rtView = rtView;
         this.view.setFeatures(this);
     }
 

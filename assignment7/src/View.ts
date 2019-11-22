@@ -104,7 +104,7 @@ export class View {
 
     }
 
-    public initScenegraph(): void {
+    public initScenegraph(): Promise<void> {
 
         //make scene graph programmatically
         /*  let meshURLs: Map<string, string> = new Map<string, string>();
@@ -153,8 +153,9 @@ export class View {
   
               this.scenegraph.setRenderer(renderer);
           }); */
-
-        ScenegraphJSONImporter.importJSON(new VertexPNTProducer(), this.json2())
+        
+          return new Promise<void>((resolve, reject) => {
+            ScenegraphJSONImporter.importJSON(new VertexPNTProducer(), this.json2())
             .then((s: Scenegraph<VertexPNT>) => {
                 let shaderVarsToVertexAttribs: Map<string, string> = new Map<string, string>();
                 shaderVarsToVertexAttribs.set("vPosition", "position");
@@ -163,9 +164,10 @@ export class View {
                 let renderer: ScenegraphRenderer = new ScenegraphRenderer(this.gl, this.shaderLocations, shaderVarsToVertexAttribs);
                 this.scenegraph = s;
                 this.scenegraph.setRenderer(renderer);
+                resolve(undefined);
             });
+          });
         //set it up
-
     }
 
     public initPlaneAttribs (): void {

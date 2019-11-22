@@ -35,9 +35,11 @@ function main(): void {
         }
         //console.log("Window loaded");
         view = new View(gl);
+        //set up the ray tracer view
+        let raytracerView: RTView = new RTView();
 
 
-        controller = new Controller(view);
+        controller = new Controller(view, raytracerView);
         controller.go();
 
         var tick = function () {
@@ -58,10 +60,6 @@ function main(): void {
             //this line sets up the animation
             requestAnimationFrame(tick);
         };
-
-         //set up the ray tracer view
-        let raytracerView: RTView = new RTView();
-        raytracerView.fillCanvas();
 
         //call tick the first time
         tick();

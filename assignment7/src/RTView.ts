@@ -1,3 +1,6 @@
+import { vec3 } from "gl-matrix";
+import { RayTraceSolver } from "RayTraceSolver";
+
 export class RTView {
     private canvas: HTMLCanvasElement;
     constructor() {
@@ -18,16 +21,16 @@ export class RTView {
         link.click();
     }
 
-    public fillCanvas(): void {
+    public fillCanvas(pixels: vec3[][]): void {
         let width: number = Number(this.canvas.getAttribute("width"));
         let height: number = Number(this.canvas.getAttribute("height"));
         let imageData: ImageData = this.canvas.getContext('2d').createImageData(width, height);
 
         for (let i: number = 0; i < height; i++) {
             for (let j: number = 0; j < width; j++) {
-                imageData.data[4 * (i * width + j)] = Math.random() * 255;
-                imageData.data[4 * (i * width + j) + 1] = Math.random() * 255;
-                imageData.data[4 * (i * width + j) + 2] = Math.random() * 255;
+                imageData.data[4 * (i * width + j)] = pixels[i][j][0];
+                imageData.data[4 * (i * width + j) + 1] = pixels[i][j][1];
+                imageData.data[4 * (i * width + j) + 2] = pixels[i][j][2];
                 imageData.data[4 * (i * width + j) + 3] = 255;
             }
         }

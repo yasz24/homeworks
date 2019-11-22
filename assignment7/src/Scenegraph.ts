@@ -98,8 +98,8 @@ export class Scenegraph<VertexType extends IVertexData> {
         return this.root.findLights(modelView);
     }
 
-    public rayIntersect(ray: Ray, modelview: Stack<mat4>): HitRecord {
-        this.root.rayIntersect(ray, modelview)
+    public rayIntersect(ray: Ray, modelview: Stack<mat4>): HitRecord | undefined {
+        return this.root.rayIntersect(ray, modelview);
     }
 
     public addPolygonMesh(meshName: string, mesh: Mesh.PolygonMesh<VertexType>): void {

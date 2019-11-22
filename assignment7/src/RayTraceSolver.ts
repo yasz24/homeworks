@@ -6,8 +6,8 @@ import { VertexPNT } from "./VertexPNT";
 
 export interface HitRecord {
     time: number,
-    intersectionPoint: vec3,
-    normal: vec3,
+    intersectionPoint: vec4,
+    normal: vec4,
     material: Material
 }
 
@@ -37,20 +37,21 @@ export class RayTraceSolver {
             for(let x: number = 0; x < width; x++) {
                 let ray: Ray = {
                     startPoint: vec4.fromValues(0, 0, 0, 1),
-                    direction: vec4.fromValues(x - (width / 2), y - (height / 2), -distToProjPlane, 0);
+                    direction: vec4.fromValues(x - (width / 2), y - (height / 2), -distToProjPlane, 0)
                 }
                 pixel[y][x] = this.rayCast(ray, modelview);
             }
         }
-
+        return pixel
     }
 
     private rayCast(ray: Ray, modelview: Stack<mat4>): vec3 {
-        let hitRecord: HitRecord | undefined = this.scenegraph.rayIntersect(ray, modelview)
+        let hitRecord: HitRecord | undefined = this.scenegraph.rayIntersect(ray, modelview);
         if (hitRecord) {
-            let color: vec3 = this.shade(hitRecord);
+            let color: vec3 = vec3.fromValues(1, 1, 1);
+            return color;
         }
-        return color;
+        return vec3.fromValues(0, 0, 0);
     }
 }
 

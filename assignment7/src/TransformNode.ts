@@ -1,5 +1,5 @@
 import { SGNode } from "./SGNode"
-import { mat4 } from "gl-matrix";
+import { mat4, vec3 } from "gl-matrix";
 import { Scenegraph } from "./Scenegraph";
 import { Stack } from "%COMMON/Stack";
 import { ScenegraphRenderer } from "./ScenegraphRenderer";
