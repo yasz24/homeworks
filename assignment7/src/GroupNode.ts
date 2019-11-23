@@ -67,17 +67,6 @@ export class GroupNode extends SGNode {
 
     public findLights(modelView: Stack<mat4>): Light[] {
         let res: Light[] = this.getTransformedLights(modelView.peek()); 
-        // let accInLen = acc.length;
-        // // if (acc.length >= 1) {
-        // //     console.log(acc);
-        // // }
-        // acc = acc.concat(this.getTransformedLights(modelView.peek()));
-        // if (!(acc.length >= accInLen)) {
-        //     console.log("problem");
-        // }
-        // // if (this.getTransformedLights(modelView.peek()).length >= 1) {
-        // //     console.log(acc);
-        // // }
         this.children.forEach(child => res = res.concat(child.findLights(modelView)));
         return res
     }

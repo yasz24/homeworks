@@ -104,7 +104,6 @@ export class ScenegraphRenderer {
      * @param transformation
      */
     public drawMesh(meshName: string, material: Material, textureName: string, transformation: mat4) {
-        //console.log("Mesh name: " + meshName);
         if (this.meshRenderers.has(meshName)) {
             // this.gl.enable(this.gl.TEXTURE_2D);
             //deal with texture 0
@@ -132,10 +131,6 @@ export class ScenegraphRenderer {
             this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("normalmatrix"), false, normalMatrix);
             
             //bind the appropriate texture
-            //console.log(textureName);
-            // console.log(this.textures["white"]);
-            // console.log(this.textures);
-            //textureName = "wall";
             this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[textureName].getTextureID());
 
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
@@ -147,8 +142,6 @@ export class ScenegraphRenderer {
             this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
 
             //send the texture matrix
-            //this.gl.uniformMatrix4fv(this.shaderLocations.getUniformLocation("texturematrix"), false, mat4.create());
-
             this.meshRenderers.get(meshName).draw(this.shaderLocations);
         }
     }
