@@ -105,7 +105,6 @@ export class View {
     }
 
     public getScenegraph() {
-        console.log(this.scenegraph);
         return this.scenegraph;
     }
 
@@ -168,7 +167,6 @@ export class View {
                 shaderVarsToVertexAttribs.set("vTexCoord", "texcoord");
                 let renderer: ScenegraphRenderer = new ScenegraphRenderer(this.gl, this.shaderLocations, shaderVarsToVertexAttribs);
                 this.scenegraph = s;
-                console.log(this.scenegraph);
                 this.scenegraph.setRenderer(renderer);
                 resolve(undefined);
             });
@@ -893,8 +891,7 @@ export class View {
             "type":"transform",
             "name":"${type}-obj${objNum}",
             "transform":[
-                {"scale":[${scale[0]}, ${normalizeYscale * scale[1]}, ${scale[2]}]},
-                {"translate":[0,${normalizeCenter},0]}
+                {"scale":[${scale[0]}, ${normalizeYscale * scale[1]}, ${scale[2]}]}
             ],
             "child": {
                     "type":"object",
@@ -1128,7 +1125,7 @@ export class View {
         this.modelview.push(mat4.create());
         this.modelview.push(mat4.clone(this.modelview.peek()));
         
-        mat4.lookAt(this.modelview.peek(), vec3.fromValues(0, 30, 50), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
+        mat4.lookAt(this.modelview.peek(), vec3.fromValues(0, 0, 50), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
 
         let lights = this.scenegraph.findLights(this.modelview);
 

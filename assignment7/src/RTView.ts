@@ -25,7 +25,6 @@ export class RTView {
     }
 
     public fillCanvas(scenegraph: Scenegraph<VertexPNT>): void {
-        console.log(scenegraph);
         let width: number = Number(this.canvas.getAttribute("width"));
         let height: number = Number(this.canvas.getAttribute("height"));
         let imageData: ImageData = this.canvas.getContext('2d').createImageData(width, height);

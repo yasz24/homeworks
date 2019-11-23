@@ -111,7 +111,7 @@ export class LeafNode extends SGNode {
                     hitrecord.intersectionPoint = vec4.transformMat4(hitrecord.intersectionPoint,
                         hitrecord.intersectionPoint, modelView.peek());
                     hitrecord.normal = vec4.transformMat4(hitrecord.normal,
-                        hitrecord.normal, modelView.peek());
+                        hitrecord.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())))
                 }
                 return hitrecord;
             case "sphere":
@@ -120,7 +120,7 @@ export class LeafNode extends SGNode {
                     hitrecord2.intersectionPoint = vec4.transformMat4(hitrecord2.intersectionPoint,
                         hitrecord2.intersectionPoint, modelView.peek());
                     hitrecord2.normal = vec4.transformMat4(hitrecord2.normal,
-                        hitrecord2.normal, modelView.peek());
+                        hitrecord2.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())));
                 }
                 return hitrecord2;
             default:
@@ -189,17 +189,23 @@ export class LeafNode extends SGNode {
             return undefined;
         }
         else {
-            let t1: number = (-B - discriminant) / (2 * A);
-            let t2: number = (-B + discriminant) / (2 * A);
+            let t1: number = (-B - Math.sqrt(discriminant)) / (2 * A);
+            let t2: number = (-B + Math.sqrt(discriminant)) / (2 * A);
             if (t1 < 0 && t2 < 0) {
                return undefined;
             }
             let time: number = t1 > 0 ? t1 : t2;
             let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, time));
             let normal: vec4 = vec4.fromValues(intersectionPoint[0], intersectionPoint[1], intersectionPoint[2], 0);
-            // if (normal[0] === 0 && normal[1] === 0) {
-            //     console.log("at camera");
-            // }
+            if (normal[0] === 0 && normal[1] === 0 && normal[2] < 0) {
+                console.log(intersectionPoint);
+                console.log("A:" + A);
+                console.log("B:" + B);
+                console.log("C:" + C);
+                console.log("time:" + time);
+                console.log("t1:" + t1);
+                console.log("t2:" + t2);
+            }
 
             let hitrecord: HitRecord = {
                 time: time,
