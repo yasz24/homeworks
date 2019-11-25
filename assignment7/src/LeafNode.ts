@@ -186,15 +186,6 @@ export class LeafNode extends SGNode {
             let time: number = t1 > 0 ? t1 : t2;
             let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, time));
             let normal: vec4 = vec4.fromValues(intersectionPoint[0], intersectionPoint[1], intersectionPoint[2], 0);
-            if (normal[0] === 0 && normal[1] === 0 && normal[2] < 0) {
-                console.log(intersectionPoint);
-                console.log("A:" + A);
-                console.log("B:" + B);
-                console.log("C:" + C);
-                console.log("time:" + time);
-                console.log("t1:" + t1);
-                console.log("t2:" + t2);
-            }
 
             let hitrecord: HitRecord = {
                 time: time,
