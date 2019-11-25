@@ -21,12 +21,15 @@ export interface Ray {
 
 export class RayTraceSolver {
     private scenegraph:  Scenegraph<VertexPNT>;
+    private modelView: Stack<mat4>;
     private lights: Light[];
     private readonly fov: number = Math.PI / 2;
     private readonly background: vec3 = vec3.fromValues(0, 0, 0);
+    private readonly FUDGE: number = 0.001;
     
     public constructor(scenegraph: Scenegraph<VertexPNT>, modelView: Stack<mat4>) {
         this.scenegraph = scenegraph;
+        this.modelView = modelView;
         this.lights = this.scenegraph.findLights(modelView);
     }
     public rayTrace(width: number, height: number, modelview: Stack<mat4>): vec3[][] {
@@ -96,7 +99,28 @@ export class RayTraceSolver {
 
             if (phi > Math.cos(light.getSpotCutoff())) {
                 let ads: vec3 = vec3.add(vec3.create(), vec3.add(vec3.create(), ambient, diffuse), specular);
-                result = vec4.add(result, result, vec4.fromValues(ads[0], ads[1], ads[2], 1));
+                //shadows
+                let shadowRayStart: vec4 = hitRecord.intersectionPoint;
+                let shadowVec: vec4 = vec4.subtract(vec4.create(), light.getPosition(), shadowRayStart);
+                shadowRayStart = vec4.add(vec4.create(), shadowRayStart, vec4.scale(vec4.create(), 
+                vec4.normalize(vec4.create(), shadowVec), this.FUDGE));
+                let shadowRay: Ray = {
+                    startPoint: shadowRayStart,
+                    direction: shadowVec
+                } 
+                let shadowHit: HitRecord | undefined = this.scenegraph.rayIntersect(shadowRay, this.modelView);
+
+                if (shadowHit && !(shadowHit.time < 1 && shadowHit.time > 0) || !shadowHit) {
+                    result = vec4.add(result, result, vec4.fromValues(ads[0], ads[1], ads[2], 1));
+                }
+
+                // if (shadowHit) {
+                //     if (!(shadowHit.time < 1 && shadowHit.time > 0)) {
+                //         result = vec4.add(result, result, vec4.fromValues(ads[0], ads[1], ads[2], 1));
+                //     }
+                // } else {
+                //     result = vec4.add(result, result, vec4.fromValues(ads[0], ads[1], ads[2], 1));
+                // }  
             }
         }
         return vec3.fromValues(result[0], result[1], result[2]);

@@ -239,18 +239,26 @@ export class View {
                           1.0
                         ],
                         "position": [
-                          0.0,
                           -60.0,
+                          0.0,
+<<<<<<< HEAD
+                          -60.0,
+=======
+>>>>>>> 787a278... ys - shadows
                           0.0,
                           1.0
                         ],
                         "spotdirection": [
                           0.0,
+<<<<<<< HEAD
                           1.0,
+=======
+                          0.0,
+>>>>>>> 787a278... ys - shadows
                           0.0,
                           0.0
                         ],
-                        "spotcutoff": 5.0
+                        "spotcutoff": 180.0
                       },
                     {
                         "ambient": [
