@@ -32,12 +32,12 @@ function main(): void {
     let fShaderSource: string;
 
     //get the vertex and fragment shader code as a string
-    vShaderSource = getVShader();
-    fShaderSource = getFShader();
+    vShaderSource = getPhongVShaderV2();
+    fShaderSource = getPhongFShaderV2(5);
 
 
     //initialize the view, and pass the shader sources to the view
-    view.initShaders(getPhongVShaderV2(), getPhongFShaderV2(5));
+    view.initShaders(vShaderSource, fShaderSource);
     view.initScenegraph();
     view.initPlaneAttribs();
     console.log("about to call draw")
@@ -56,31 +56,31 @@ function draw(gl: WebGLRenderingContext) {
 
 }
 
-function getVShader(): string {
+// function getVShader(): string {
 
-    return `attribute vec4 vPosition;
-    uniform vec4 vColor;
-    uniform mat4 proj;
-    varying vec4 outColor;
+//     return `attribute vec4 vPosition;
+//     uniform vec4 vColor;
+//     uniform mat4 proj;
+//     varying vec4 outColor;
     
-    void main()
-    {
-        gl_Position = proj * vPosition;
-        outColor = vColor;
-    }
-    `;
-}
+//     void main()
+//     {
+//         gl_Position = proj * vPosition;
+//         outColor = vColor;
+//     }
+//     `;
+// }
 
-function getFShader(): string {
-    return `precision mediump float;
-    varying vec4 outColor;
+// function getFShader(): string {
+//     return `precision mediump float;
+//     varying vec4 outColor;
 
-    void main()
-    {
-        gl_FragColor = outColor;
-    }
-    `;
-}
+//     void main()
+//     {
+//         gl_FragColor = outColor;
+//     }
+//     `;
+// }
 
 function getPhongVShaderV2(): string {
     return `

@@ -35,15 +35,11 @@ export class PlaneAttributes {
             if (index === 0) {
                 this.numPositions = parseInt(line);
             } else {
-                //console.log(line);
                 let splitArray: string[] = line.split(/\s+/);
                 let splitFloatArray: number[] = splitArray.map(x => parseFloat(x))
-                // console.log(splitFloatArray);
                 if (splitArray.length === this.numTokens) {
-                    // console.log(vec3.fromValues(splitFloatArray[0], splitFloatArray[1], splitFloatArray[2]));
                     this.listPositions.push(vec3.fromValues(splitFloatArray[0], splitFloatArray[1], splitFloatArray[2]))
                     this.listUpVecs.push(vec3.fromValues(splitFloatArray[3], splitFloatArray[4], splitFloatArray[5]))
-                    //console.log(this.listPositions);
                 } 
             }
         });

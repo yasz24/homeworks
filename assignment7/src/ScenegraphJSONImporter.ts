@@ -133,7 +133,6 @@ export namespace ScenegraphJSONImporter {
                 if (values.length != 3) {
                     throw new Error("3 values needed for scale")
                 }
-                //console.log(values);
                 let scaleBy: vec3 = vec3.fromValues(values[0], values[1], values[2]);
                 mat4.scale(transform, transform, scaleBy);
             }
@@ -203,7 +202,6 @@ export namespace ScenegraphJSONImporter {
                 material.setShininess(obj["material"]["shininess"]);
             }
             result.setMaterial(material);
-            //console.log(result["material"])
         }
         return result;
     }

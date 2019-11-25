@@ -224,6 +224,36 @@ export class View {
                 "lights": [
                     {
                         "ambient": [
+                          0.0,
+                          0.0,
+                          1.0
+                        ],
+                        "diffuse": [
+                          0.0,
+                          0.0,
+                          1.0
+                        ],
+                        "specular": [
+                          0.0,
+                          0.0,
+                          1.0
+                        ],
+                        "position": [
+                          0.0,
+                          60.0,
+                          0.0,
+                          1.0
+                        ],
+                        "spotdirection": [
+                          0.0,
+                          -1.0,
+                          0.0,
+                          0.0
+                        ],
+                        "spotcutoff": 5.0
+                      },
+                    {
+                        "ambient": [
                           0.4,
                           0.4,
                           0.4
@@ -254,7 +284,15 @@ export class View {
                       }
                   ],
                 "children":[
-                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1)}
+                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1)},
+                    {
+                        "type":"transform",
+                        "name":"place-obj1",
+                        "transform":[
+                            {"translate":[22,0,0]}
+                        ],
+                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1)}
+                    }
                 ]
 
             }
@@ -1125,7 +1163,7 @@ export class View {
         this.modelview.push(mat4.create());
         this.modelview.push(mat4.clone(this.modelview.peek()));
         
-        mat4.lookAt(this.modelview.peek(), vec3.fromValues(0, 0, 50), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
+        mat4.lookAt(this.modelview.peek(), vec3.fromValues(-20, -20, 20), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
 
         let lights = this.scenegraph.findLights(this.modelview);
 
