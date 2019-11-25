@@ -226,7 +226,7 @@ export class View {
                         "ambient": [
                           0.0,
                           0.0,
-                          1.0
+                          0.0
                         ],
                         "diffuse": [
                           0.0,
@@ -240,13 +240,13 @@ export class View {
                         ],
                         "position": [
                           0.0,
-                          60.0,
+                          -60.0,
                           0.0,
                           1.0
                         ],
                         "spotdirection": [
                           0.0,
-                          -1.0,
+                          1.0,
                           0.0,
                           0.0
                         ],

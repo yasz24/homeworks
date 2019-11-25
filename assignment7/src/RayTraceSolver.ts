@@ -23,6 +23,7 @@ export class RayTraceSolver {
     private scenegraph:  Scenegraph<VertexPNT>;
     private lights: Light[];
     private readonly fov: number = Math.PI / 2;
+    private readonly background: vec3 = vec3.fromValues(0, 0, 0);
     
     public constructor(scenegraph: Scenegraph<VertexPNT>, modelView: Stack<mat4>) {
         this.scenegraph = scenegraph;
@@ -55,7 +56,7 @@ export class RayTraceSolver {
             let color: vec3 = this.shade(hitRecord);
             return color;
         }
-        return vec3.fromValues(0, 0, 0);
+        return this.background;
     }
 
     private shade(hitRecord: HitRecord): vec3 {
