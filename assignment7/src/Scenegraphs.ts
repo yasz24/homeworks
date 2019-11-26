@@ -54,7 +54,7 @@ function main(): void {
                 //document.getElementById('frameratedisplay').innerHTML = "Frame rate: " + frameRate.toFixed(1);
                 numFrames = 0;
             }
-            view.animate();
+            //view.animate();
             view.draw();
 
             //this line sets up the animation

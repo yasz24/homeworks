@@ -229,32 +229,25 @@ export class View {
                           0.0
                         ],
                         "diffuse": [
+                          1.0,
                           0.0,
-                          0.0,
-                          1.0
+                          0.0
                         ],
                         "specular": [
+                          1.0,
                           0.0,
-                          0.0,
-                          1.0
+                          0.0
                         ],
                         "position": [
                           -60.0,
                           0.0,
-<<<<<<< HEAD
                           -60.0,
-=======
->>>>>>> 787a278... ys - shadows
                           0.0,
                           1.0
                         ],
                         "spotdirection": [
                           0.0,
-<<<<<<< HEAD
                           1.0,
-=======
-                          0.0,
->>>>>>> 787a278... ys - shadows
                           0.0,
                           0.0
                         ],
@@ -278,8 +271,8 @@ export class View {
                         ],
                         "position": [
                           0.0, 
-                          0.0, 
-                          60,
+                          60.0, 
+                          -20,
                           1.0
                         ],
                         "spotdirection": [
@@ -292,20 +285,22 @@ export class View {
                       }
                   ],
                 "children":[
-                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1)},
+                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 1)},
                     {
                         "type":"transform",
                         "name":"place-obj1",
                         "transform":[
                             {"translate":[22,0,0]}
                         ],
-                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1)}
+                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 0.2)}
                     }
                 ]
 
             }
         }
         `;
+
+        //${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 1)},
         
         /*
         {
@@ -352,7 +347,7 @@ export class View {
                 "transform":[
                     {"rotate":[90,1,0,0]}
                 ],
-                "child": ${this.objectJson("plane",scale, color, 4)},
+                "child": ${this.objectJson("plane",scale, color, 4, 1)},
                 "lights": [
                     {
                         "ambient": [
@@ -485,7 +480,7 @@ export class View {
                 "transform":[
                     {"translate":[12.5,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 3, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 3, 1, "wall3")}
             }
         ` 
     }
@@ -500,7 +495,7 @@ export class View {
                 "transform":[
                     {"translate":[30,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 4, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 4, 1, "wall3")}
             }
         ` 
     }
@@ -528,7 +523,7 @@ export class View {
                 "transform":[
                     {"translate":[50,0,-50]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 6, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 6, 1, "wall3")}
             }
         ` 
     }
@@ -543,7 +538,7 @@ export class View {
                 "transform":[
                     {"translate":[47.5,0,-35]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 7, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 7, 1, "wall3")}
             }
         ` 
     }
@@ -577,7 +572,7 @@ export class View {
                 "transform":[
                     {"translate":[32.5,0,-5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 9, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 9, 1, "wall3")}
             }
         ` 
     }
@@ -592,7 +587,7 @@ export class View {
                 "transform":[
                     {"translate":[60,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 10, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 10, 1, "wall3")}
             }
         ` 
     }
@@ -607,7 +602,7 @@ export class View {
                 "transform":[
                     {"translate":[70,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 11, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 11, 1, "wall3")}
             }
         ` 
     }
@@ -648,7 +643,7 @@ export class View {
                 "transform":[
                     {"translate":[80,0,-27.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 14, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 14, 1, "wall3")}
             }
         ` 
     }
@@ -689,7 +684,7 @@ export class View {
                 "transform":[
                     {"translate":[103,0,-27]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 17, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 17, 1, "wall3")}
             }
         ` 
     }
@@ -704,7 +699,7 @@ export class View {
                 "transform":[
                     {"translate":[95,0,-50]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 18, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 18, 1, "wall3")}
             }
         ` 
     }
@@ -736,7 +731,7 @@ export class View {
                 "transform":[
                     {"translate":[131,0,-50]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 20, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 20, 1, "wall3")}
             }
         ` 
     }
@@ -777,7 +772,7 @@ export class View {
                 "transform":[
                     {"translate":[136,0,-29.5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 23, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 23, 1, "wall3")}
             }
         ` 
     }
@@ -792,7 +787,7 @@ export class View {
                 "transform":[
                     {"translate":[12.5,0,-5]}
                 ],
-                "child": ${this.objectJson("box",scale, color, 24, "wall3")}
+                "child": ${this.objectJson("box",scale, color, 24, 1, "wall3")}
             }
         ` 
     }
@@ -816,7 +811,7 @@ export class View {
         return `
         {
             "type":"group",
-            "children":[${this.objectJson("box", boxScale, boxColor, objNum, "wall2")},
+            "children":[${this.objectJson("box", boxScale, boxColor, objNum, 1, "wall2")},
                 {
                     "type":"transform",
                     "name":"cylinder-obj${objNum}",
@@ -845,7 +840,7 @@ export class View {
         return `
         {
             "type":"group",
-            "children":[${this.objectJson("box", baseScale, baseColor, 5, "wall3")},
+            "children":[${this.objectJson("box", baseScale, baseColor, 5, 1, "wall3")},
                 {
                     "type":"transform",
                     "name":"cylinder-obj5",
@@ -855,7 +850,7 @@ export class View {
                     "child": 
                     {
                         "type":"group",
-                        "children":[${this.objectJson("cylinder", towerScale, towerColor, 5, "wall")},
+                        "children":[${this.objectJson("cylinder", towerScale, towerColor, 5, 1, "wall")},
                         {
                             "type":"transform",
                             "name":"mainMinaret-obj5",
@@ -907,21 +902,21 @@ export class View {
     private drawMinaret(cylinderScale: number[], cylinderColor: number[], coneScale: number[], coneColor: number[], objNum: number): string {
         return `{
             "type":"group",
-            "children":[${this.objectJson("cylinder", cylinderScale, cylinderColor, objNum, "wall")},
+            "children":[${this.objectJson("cylinder", cylinderScale, cylinderColor, objNum, 1, "wall")},
                 {
                     "type":"transform",
                     "name":"cone-obj${objNum}",
                     "transform":[
                         {"translate":[0,${cylinderScale[1]},0]}
                     ],
-                    "child": ${this.objectJson("cone", coneScale, coneColor, objNum, "roof")}
+                    "child": ${this.objectJson("cone", coneScale, coneColor, objNum, 1, "roof")}
                     
                 }
             ]
         }`
     }
 
-    private objectJson (type: string, scale: number[], color: number[], objNum: number, texture?: string): string {
+    private objectJson (type: string, scale: number[], color: number[], objNum: number, absorption: number, texture?: string): string {
         let normalizeCenter = 0.25;
         let normalizeYscale = 2
         let textureString: string = ""
@@ -947,7 +942,8 @@ export class View {
                         "ambient":[${color[0] / 1.5}, ${color[1] / 1.5}, ${color[2] / 1.5}],
                         "specular":[${color[0]}, ${color[1]}, ${color[2]}],
                         "diffuse":[${color[0]}, ${color[1]}, ${color[2]}],
-                        "shininess": 10
+                        "shininess": 10,
+                        "absorption": ${absorption}
                     }
             }
             
@@ -1143,9 +1139,9 @@ export class View {
 
     public animate(): void {
         this.time += 1;
-        if (this.scenegraph != null) {
-            this.scenegraph.animate(this.time, null, this.numPlanePositions, this.generateLookAtMatrix(false));
-        }
+        // if (this.scenegraph != null) {
+        //     this.scenegraph.animate(this.time, null, this.numPlanePositions, this.generateLookAtMatrix(false));
+        // }
         this.draw();
     }
 

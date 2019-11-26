@@ -100,7 +100,8 @@ export class LeafNode extends SGNode {
                     hitrecord.intersectionPoint = vec4.transformMat4(hitrecord.intersectionPoint,
                         hitrecord.intersectionPoint, modelView.peek());
                     hitrecord.normal = vec4.transformMat4(hitrecord.normal,
-                        hitrecord.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())))
+                        hitrecord.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())));
+                    hitrecord.normal[3] = 0; //making sure that the homogenous coordinate remains 0
                 }
                 return hitrecord;
             case "sphere":
@@ -110,6 +111,7 @@ export class LeafNode extends SGNode {
                         hitrecord2.intersectionPoint, modelView.peek());
                     hitrecord2.normal = vec4.transformMat4(hitrecord2.normal,
                         hitrecord2.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())));
+                    hitrecord2.normal[3] = 0; //making sure that the homogenous coordinate remains 0
                 }
                 return hitrecord2;
             default:

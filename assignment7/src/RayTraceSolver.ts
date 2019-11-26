@@ -46,23 +46,23 @@ export class RayTraceSolver {
                     startPoint: vec4.fromValues(0, 0, 0, 1),
                     direction: vec4.fromValues(x - (width / 2), y - (height / 2), -distToProjPlane, 0)
                 }
-                pixel[y][x] = this.rayCast(ray, modelview);
+                pixel[y][x] = this.rayCast(ray, modelview, 5);
             }
         }
         pixel.reverse();
         return pixel;
     }
 
-    private rayCast(ray: Ray, modelview: Stack<mat4>): vec3 {
+    private rayCast(ray: Ray, modelview: Stack<mat4>, bounce: number): vec3 {
         let hitRecord: HitRecord | undefined = this.scenegraph.rayIntersect(ray, modelview);
         if (hitRecord) {
-            let color: vec3 = this.shade(hitRecord);
+            let color: vec3 = this.shade(ray, hitRecord, bounce);
             return color;
         }
         return this.background;
     }
 
-    private shade(hitRecord: HitRecord): vec3 {
+    private shade(inRay: Ray, hitRecord: HitRecord, bounce: number): vec3 {
         let result: vec4 = vec4.fromValues(0, 0, 0, 1);
         let lightVec: vec3;
         let intersectionXYZ: vec3 = vec3.fromValues(hitRecord.intersectionPoint[0], hitRecord.intersectionPoint[1], hitRecord.intersectionPoint[2]);
@@ -75,7 +75,7 @@ export class RayTraceSolver {
                 lightVec = vec3.normalize(vec3.create(),
                                             vec3.negate(vec3.create(), lightPosnXYZ));
             }
-            let normalView: vec3 = vec3.normalize(vec3.create(), vec3.fromValues(hitRecord.normal[0], hitRecord.normal[1], hitRecord.normal[2]))
+            let normalView: vec3 = vec3.normalize(vec3.create(), vec3.fromValues(hitRecord.normal[0], hitRecord.normal[1], hitRecord.normal[2]));
             let nDotL: number = vec3.dot(normalView, lightVec);
 
             let viewVec: vec3 = vec3.normalize(vec3.create(), vec3.negate(vec3.create(), intersectionXYZ));
@@ -97,31 +97,73 @@ export class RayTraceSolver {
             let phi: number = vec3.dot(vec3.fromValues(light.getSpotDirection()[0], light.getSpotDirection()[1], light.getSpotDirection()[2]),
                                     toReflect);
 
-            if (phi > Math.cos(light.getSpotCutoff())) {
-                let ads: vec3 = vec3.add(vec3.create(), vec3.add(vec3.create(), ambient, diffuse), specular);
-                //shadows
-                let shadowRayStart: vec4 = hitRecord.intersectionPoint;
-                let shadowVec: vec4 = vec4.subtract(vec4.create(), light.getPosition(), shadowRayStart);
-                shadowRayStart = vec4.add(vec4.create(), shadowRayStart, vec4.scale(vec4.create(), 
-                vec4.normalize(vec4.create(), shadowVec), this.FUDGE));
-                let shadowRay: Ray = {
-                    startPoint: shadowRayStart,
-                    direction: shadowVec
-                } 
-                let shadowHit: HitRecord | undefined = this.scenegraph.rayIntersect(shadowRay, this.modelView);
+            let absorb: number = hitRecord.material.getAbsorption();
+            let reflect: number = hitRecord.material.getReflection();
+            let absorbComp: vec4 = vec4.fromValues(0, 0, 0, 0);
+            let reflectComp: vec4 = vec4.fromValues(0, 0, 0, 0);
+            // finding absorb component
+            if (hitRecord.material.getAbsorption() > 0) {
+                if (phi > Math.cos(light.getSpotCutoff())) {
+                    let ads: vec3 = vec3.add(vec3.create(), vec3.add(vec3.create(), ambient, diffuse), specular);
+                    //shadows
+                    let shadowRayStart: vec4 = hitRecord.intersectionPoint;
+                    let shadowVec: vec4 = vec4.subtract(vec4.create(), light.getPosition(), shadowRayStart);
+                    shadowRayStart = vec4.add(vec4.create(), shadowRayStart, vec4.scale(vec4.create(), 
+                    vec4.normalize(vec4.create(), shadowVec), this.FUDGE));
+                    let shadowRay: Ray = {
+                        startPoint: shadowRayStart,
+                        direction: shadowVec
+                    } 
+                    let shadowHit: HitRecord | undefined = this.scenegraph.rayIntersect(shadowRay, this.modelView);
 
-                if (shadowHit && !(shadowHit.time < 1 && shadowHit.time > 0) || !shadowHit) {
-                    result = vec4.add(result, result, vec4.fromValues(ads[0], ads[1], ads[2], 1));
+                    if (shadowHit && !(shadowHit.time < 1 && shadowHit.time > 0) || !shadowHit) {
+                        absorbComp = vec4.fromValues(ads[0], ads[1], ads[2], 1);
+                    }
                 }
-
-                // if (shadowHit) {
-                //     if (!(shadowHit.time < 1 && shadowHit.time > 0)) {
-                //         result = vec4.add(result, result, vec4.fromValues(ads[0], ads[1], ads[2], 1));
-                //     }
-                // } else {
-                //     result = vec4.add(result, result, vec4.fromValues(ads[0], ads[1], ads[2], 1));
-                // }  
             }
+            if (hitRecord.material.getReflection() > 0) {
+                if (bounce === 0) {
+                    reflectComp = absorbComp;
+                    console.log("bounce is 0");
+                } else {
+                    let rayStart: vec4 = hitRecord.intersectionPoint;
+                    let incomingRay: vec4 = vec4.normalize(vec4.create(), inRay.direction);
+                    let normalRay: vec4 = vec4.normalize(vec4.create(), hitRecord.normal);
+                    let ndoti: number = vec4.dot(normalRay, incomingRay);
+                    let rayDir: vec4 = vec4.subtract(vec4.create(), incomingRay, 
+                    vec4.scale(vec4.create(), normalRay, 2 * ndoti));
+
+                    let rayStartFudge: vec4 = vec4.add(vec4.create(), rayStart, vec4.scale(vec4.create(), rayDir, this.FUDGE));
+                    
+                    let newRay: Ray = {
+                        startPoint: rayStartFudge,
+                        direction: rayDir
+                    }
+
+                    
+                    //if (normalRay[1] === 0 && normalRay[2] === 0) {
+                    //   console.log("normal" + normalRay);
+                    //}
+                    let reflectColor: vec3 = this.rayCast(newRay, this.modelView, bounce - 1);
+                    reflectComp = vec4.fromValues(reflectColor[0], reflectColor[1], reflectColor[2], 1);
+                    if (incomingRay[0] === 0 && incomingRay[1] === 0) {
+                        console.log("start" + newRay.startPoint);
+                        console.log("dir" + newRay.direction);
+                        console.log("realStart" + rayStart);
+                        console.log("incoming" + incomingRay);
+                        console.log("normal" + normalRay);
+                        console.log(reflectColor);
+                        console.log(reflectComp);
+                    }
+                }
+            }
+
+            
+            //TODO: add absorb and reflect to result
+            result = vec4.add(result, result, vec4.scale(vec4.create(), absorbComp, absorb));
+            result = vec4.add(result, result, vec4.scale(vec4.create(), reflectComp, reflect));
+            result[3] = 0;
+            
         }
         return vec3.fromValues(result[0], result[1], result[2]);
     }

@@ -201,6 +201,14 @@ export namespace ScenegraphJSONImporter {
                 material.setDiffuse(obj["material"]["diffuse"]);
                 material.setShininess(obj["material"]["shininess"]);
             }
+            if ("absorption" in obj["material"]) {
+                if (obj["material"]["absorption"] <= 1) { 
+                    material.setAbsorption(obj["material"]["absorption"]);
+                    material.setReflection(1 - obj["material"]["absorption"]);
+                } else {
+                    console.warn("absorption must be less than 1");
+                }
+            }
             result.setMaterial(material);
         }
         return result;
