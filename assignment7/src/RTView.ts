@@ -6,7 +6,9 @@ import { Stack } from "%COMMON/Stack";
 
 export class RTView {
     private canvas: HTMLCanvasElement;
-    constructor() {
+    private readonly gl: WebGLRenderingContext;
+
+    constructor(gl: WebGLRenderingContext) {
         this.canvas = <HTMLCanvasElement>document.querySelector("#raytraceCanvas");
         if (!this.canvas) {
             console.log("Failed to retrieve the <canvas> element");
@@ -15,6 +17,7 @@ export class RTView {
         //button clicks
         let button: HTMLButtonElement = <HTMLButtonElement>document.querySelector("#savebutton");
         button.addEventListener("click", ev => this.saveCanvas());
+        this.gl = gl;
     }
 
     private saveCanvas(): void {
@@ -32,17 +35,19 @@ export class RTView {
         stack.push(mat4.create());
         mat4.lookAt(stack.peek(), vec3.fromValues(-20, -20, 20), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
         let rayTraceSolver: RayTraceSolver = new RayTraceSolver(scenegraph, stack);
-        let pixels: vec3[][] = rayTraceSolver.rayTrace(width, height, stack);
+        rayTraceSolver.initTextures(this.gl, scenegraph).then(() => {
+            let pixels: vec3[][] = rayTraceSolver.rayTrace(width, height, stack);
 
-        for (let i: number = 0; i < height; i++) {
-            for (let j: number = 0; j < width; j++) {
+            for (let i: number = 0; i < height; i++) {
+                for (let j: number = 0; j < width; j++) {
 
-                imageData.data[4 * (i * width + j)] = 255 * pixels[i][j][0];
-                imageData.data[4 * (i * width + j) + 1] = 255 * pixels[i][j][1];
-                imageData.data[4 * (i * width + j) + 2] = 255 * pixels[i][j][2];
-                imageData.data[4 * (i * width + j) + 3] = 255;
+                    imageData.data[4 * (i * width + j)] = 255 * pixels[i][j][0];
+                    imageData.data[4 * (i * width + j) + 1] = 255 * pixels[i][j][1];
+                    imageData.data[4 * (i * width + j) + 2] = 255 * pixels[i][j][2];
+                    imageData.data[4 * (i * width + j) + 3] = 255;
+                }
             }
-        }
-        this.canvas.getContext('2d').putImageData(imageData, 0, 0);
+            this.canvas.getContext('2d').putImageData(imageData, 0, 0);
+        });
     }
 }

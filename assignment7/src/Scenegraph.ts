@@ -136,4 +136,9 @@ export class Scenegraph<VertexType extends IVertexData> {
     public addTexture(textureName: string, path: string): void {
         this.textures.set(textureName, path);
     }
+
+    public getTextureMap(): Map<string, string> {
+        let mapCopy =  new Map(this.textures);
+        return mapCopy;
+    }
 }

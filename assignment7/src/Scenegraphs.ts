@@ -36,7 +36,7 @@ function main(): void {
         //console.log("Window loaded");
         view = new View(gl);
         //set up the ray tracer view
-        let raytracerView: RTView = new RTView();
+        let raytracerView: RTView = new RTView(gl);
 
 
         controller = new Controller(view, raytracerView);

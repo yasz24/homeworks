@@ -1,15 +1,18 @@
-import { vec3, mat4, vec4 } from "gl-matrix";
+import { vec3, mat4, vec4, vec2 } from "gl-matrix";
 import { Material } from "%COMMON/Material";
 import { Stack } from "%COMMON/Stack"
 import { Scenegraph } from "Scenegraph";
 import { VertexPNT } from "./VertexPNT";
 import { Light } from "%COMMON/Light";
+import { TextureObject } from "%COMMON/TextureObject";
 
 export interface HitRecord {
     time: number,
     intersectionPoint: vec4,
     normal: vec4,
-    material: Material
+    material: Material,
+    texture: string,
+    normTextureCoordinates: vec2
 }
 
 
@@ -26,12 +29,34 @@ export class RayTraceSolver {
     private readonly fov: number = Math.PI / 2;
     private readonly background: vec3 = vec3.fromValues(0, 0, 0);
     private readonly FUDGE: number = 0.001;
+    private textureMap: Map<String, TextureObject>;
     
     public constructor(scenegraph: Scenegraph<VertexPNT>, modelView: Stack<mat4>) {
         this.scenegraph = scenegraph;
         this.modelView = modelView;
         this.lights = this.scenegraph.findLights(modelView);
+        //TODO: 
+        //figure out organization - create a map of textureName -> textureObject
+        //How do you handle the gl in textureObject?  Ask tomorrow
+        //
     }
+
+    initTextures(gl: WebGLRenderingContext, scenegraph: Scenegraph<VertexPNT>): Promise<void> {
+        return new Promise<void>((resolve) => {
+            let scenegraphTextureMap = scenegraph.getTextureMap();
+            this.textureMap = new Map<string, TextureObject>();
+            for (let keyValue of scenegraphTextureMap) {
+                let name: string = keyValue[0];
+                let url: string = keyValue[1];
+                let textureObject: TextureObject = new TextureObject(gl, name, url);
+                this.textureMap.set(name, textureObject);
+            }
+            //TODO: Figure out how to continue only after the texture object's 'data' field has been loaded
+            console.log("done loading");
+            resolve();
+        });
+    }
+
     public rayTrace(width: number, height: number, modelview: Stack<mat4>): vec3[][] {
         let pixel: vec3[][] = []
         for (let y: number = 0; y < height; y++) {
@@ -97,6 +122,12 @@ export class RayTraceSolver {
             let phi: number = vec3.dot(vec3.fromValues(light.getSpotDirection()[0], light.getSpotDirection()[1], light.getSpotDirection()[2]),
                                     toReflect);
 
+            let textureCoord: vec2 = hitRecord.normTextureCoordinates;
+            console.log(hitRecord.normTextureCoordinates);
+            let textureObject: TextureObject = this.textureMap.get(hitRecord.texture);
+            console.log(textureObject);
+            let texColor:vec4 = textureObject.getColor(textureCoord[0], textureCoord[1]);
+
             let absorb: number = hitRecord.material.getAbsorption();
             let reflect: number = hitRecord.material.getReflection();
             let absorbComp: vec4 = vec4.fromValues(0, 0, 0, 0);
@@ -118,6 +149,7 @@ export class RayTraceSolver {
 
                     if (shadowHit && !(shadowHit.time < 1 && shadowHit.time > 0) || !shadowHit) {
                         absorbComp = vec4.fromValues(ads[0], ads[1], ads[2], 1);
+                        //absorbComp = vec4.multiply(absorbComp, absorbComp, texColor);
                     }
                 }
             }
@@ -139,11 +171,6 @@ export class RayTraceSolver {
                         startPoint: rayStartFudge,
                         direction: rayDir
                     }
-
-                    
-                    //if (normalRay[1] === 0 && normalRay[2] === 0) {
-                    //   console.log("normal" + normalRay);
-                    //}
                     let reflectColor: vec3 = this.rayCast(newRay, this.modelView, bounce - 1);
                     reflectComp = vec4.fromValues(reflectColor[0], reflectColor[1], reflectColor[2], 1);
                     if (incomingRay[0] === 0 && incomingRay[1] === 0) {

@@ -3,7 +3,7 @@ import { Scenegraph } from "./Scenegraph";
 import { Material } from "%COMMON/Material";
 import { Stack } from "%COMMON/Stack";
 import { ScenegraphRenderer } from "./ScenegraphRenderer";
-import { mat4, vec4, vec3 } from "gl-matrix";
+import { mat4, vec4, vec3, vec2 } from "gl-matrix";
 import { IVertexData } from "%COMMON/IVertexData";
 import { Light } from "%COMMON/Light";
 import { HitRecord, Ray } from "RayTraceSolver";
@@ -158,7 +158,9 @@ export class LeafNode extends SGNode {
                 time: time,
                 intersectionPoint: intersectionPoint,
                 material: this.material,
-                normal: normal
+                normal: normal,
+                texture: this.textureName,
+                normTextureCoordinates: this.getNormalizedBoxTextureCoord(intersectionPoint)
             }
             return hitrecord;
         } else {
@@ -193,9 +195,59 @@ export class LeafNode extends SGNode {
                 time: time,
                 intersectionPoint: intersectionPoint,
                 material: this.material,
-                normal: normal
+                normal: normal,
+                texture: this.textureName,
+                normTextureCoordinates: this.getNormalizedSphereTextureCoord(intersectionPoint)
             }
             return hitrecord;
         }
+    }
+    
+    // returns the texture coordinates assuming the texture is 1 x 1
+    private getNormalizedBoxTextureCoord(intersectionPoint: vec4): vec2 {
+        let xRatio: number = intersectionPoint[0] + 0.5;
+        let yRatio: number = intersectionPoint[1] + 0.5;
+        let zRatio: number = intersectionPoint[2] + 0.5;
+        let squareSideLen: number = 1/4;
+        // assuming camera is on positive z axis
+        if (intersectionPoint[0] === 0.5) { // right side of cube
+            let textureX = 2 * squareSideLen + (1 - yRatio) * squareSideLen;
+            let textureY =  squareSideLen + zRatio * squareSideLen;
+            return vec2.fromValues(textureX, textureY);
+        }
+        if (intersectionPoint[0] === -0.5) { // left side of cube
+            let textureX = yRatio * squareSideLen;
+            let textureY = squareSideLen + zRatio * squareSideLen;
+            return vec2.fromValues(textureX, textureY);
+        }
+        if (intersectionPoint[1] === 0.5) { //top side of cube
+            let textureX = squareSideLen + xRatio * squareSideLen;
+            let textureY = squareSideLen + zRatio * squareSideLen;
+            return vec2.fromValues(textureX, textureY);
+        }
+        if (intersectionPoint[1] === -0.5) { // bottom side of cube
+            let textureX = 3 * squareSideLen + (1 - xRatio) * squareSideLen;
+            let textureY = squareSideLen + zRatio * squareSideLen;
+            return vec2.fromValues(textureX, textureY);
+        }
+        if (intersectionPoint[2] === 0.5) { // front face of cube
+            let textureX = squareSideLen + xRatio * squareSideLen;
+            let textureY = 2 * squareSideLen + (1 - yRatio) * squareSideLen;
+            return vec2.fromValues(textureX, textureY);
+        }
+        if (intersectionPoint[2] === -0.5) {
+            let textureX = squareSideLen + xRatio * squareSideLen;
+            let textureY = yRatio * squareSideLen;
+            return vec2.fromValues(textureX, textureY);
+        }
+        console.warn("improper box");
+    }
+
+    private getNormalizedSphereTextureCoord(intersectionPoint: vec4): vec2 {
+        let phi: number = Math.asin(intersectionPoint[1]);
+        let theta: number = Math.atan2(-intersectionPoint[2], intersectionPoint[0]);
+        let textureX = (theta + Math.PI) / (2 * Math.PI);
+        let textureY = (phi + Math.PI / 2) / Math.PI;
+        return vec2.fromValues(textureX, textureY);
     }
 }
