@@ -7,11 +7,13 @@ export class TextureObject {
     private id: WebGLTexture;
     private data: Uint8ClampedArray;
     private name: string;
+    private gl: WebGLRenderingContext;
     private width: number;
     private height: number;
 
     public constructor(gl: WebGLRenderingContext, name: string, textureURL: string) {
         this.name = name;
+        this.gl = gl;
         this.id = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.id);
 
@@ -32,24 +34,6 @@ export class TextureObject {
             width, height, border, srcFormat, srcType,
             pixel);
 
-        const image = new Image();
-        image.src = textureURL;
-        image.addEventListener("load", () => {
-            gl.bindTexture(gl.TEXTURE_2D, this.id);
-            gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                srcFormat, srcType, image);
-            gl.generateMipmap(gl.TEXTURE_2D);
-
-            //capture raw data
-            let canvas: HTMLCanvasElement = document.createElement("canvas");
-            let context: CanvasRenderingContext2D = canvas.getContext("2d");
-            canvas.width = image.width;
-            canvas.height = image.height;
-            context.drawImage(image, 0, 0);
-            this.data = context.getImageData(0, 0, image.width, image.height).data;
-            this.width = canvas.width;
-            this.height = canvas.height;
-        });
     }
 
     public getTextureID(): WebGLTexture {
@@ -98,6 +82,34 @@ export class TextureObject {
         inter3 = vec4.lerp(vec4.create(), inter1, inter2, x - Math.trunc(x));
 
         return inter3;
+    }
+
+    public loadImage(textureURL: string): Promise<HTMLImageElement> {
+        return new  Promise<HTMLImageElement>(resolve => {
+            const level = 0;
+            const internalFormat = this.gl.RGBA;
+            const srcFormat = this.gl.RGBA;
+            const srcType = this.gl.UNSIGNED_BYTE;
+            const image = new Image();
+            image.src = textureURL;
+            image.addEventListener("load", () => {
+                this.gl.bindTexture(this.gl.TEXTURE_2D, this.id);
+                this.gl.texImage2D(this.gl.TEXTURE_2D, level, internalFormat,
+                    srcFormat, srcType, image);
+                this.gl.generateMipmap(this.gl.TEXTURE_2D);
+    
+                //capture raw data
+                let canvas: HTMLCanvasElement = document.createElement("canvas");
+                let context: CanvasRenderingContext2D = canvas.getContext("2d");
+                canvas.width = image.width;
+                canvas.height = image.height;
+                context.drawImage(image, 0, 0);
+                this.data = context.getImageData(0, 0, image.width, image.height).data;
+                this.width = canvas.width;
+                this.height = canvas.height;
+                resolve(image);
+            });
+        });
     }
 
     private lookup(x: number, y: number): vec4 {

@@ -41,19 +41,24 @@ export class RayTraceSolver {
         //
     }
 
-    initTextures(gl: WebGLRenderingContext, scenegraph: Scenegraph<VertexPNT>): Promise<void> {
+    public initTextures(gl: WebGLRenderingContext, scenegraph: Scenegraph<VertexPNT>): Promise<void> {
         return new Promise<void>((resolve) => {
             let scenegraphTextureMap = scenegraph.getTextureMap();
             this.textureMap = new Map<string, TextureObject>();
+            let promises: Promise<HTMLImageElement>[] = [];
             for (let keyValue of scenegraphTextureMap) {
                 let name: string = keyValue[0];
                 let url: string = keyValue[1];
                 let textureObject: TextureObject = new TextureObject(gl, name, url);
+                promises.push(textureObject.loadImage(url));
                 this.textureMap.set(name, textureObject);
             }
+            Promise.all(promises).then((images: HTMLImageElement[]) => {
+                resolve(undefined);
+            });
             //TODO: Figure out how to continue only after the texture object's 'data' field has been loaded
-            console.log("done loading");
-            resolve();
+            // console.log("done loading");
+            // resolve();
         });
     }
 
@@ -123,9 +128,7 @@ export class RayTraceSolver {
                                     toReflect);
 
             let textureCoord: vec2 = hitRecord.normTextureCoordinates;
-            console.log(hitRecord.normTextureCoordinates);
             let textureObject: TextureObject = this.textureMap.get(hitRecord.texture);
-            console.log(textureObject);
             let texColor:vec4 = textureObject.getColor(textureCoord[0], textureCoord[1]);
 
             let absorb: number = hitRecord.material.getAbsorption();

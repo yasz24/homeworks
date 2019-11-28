@@ -72,9 +72,10 @@ export class ScenegraphRenderer {
         this.meshRenderers.set(meshName, renderableMesh);
     }
 
-    public addTexture(name: string, path: string): void {
+    public addTexture(name: string, path: string): Promise<HTMLImageElement> {
         let texObj: TextureObject = new TextureObject(this.gl, name, path);
         this.textures[name] = texObj;
+        return texObj.loadImage(path);
     }
 
     /**

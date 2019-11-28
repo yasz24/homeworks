@@ -6,7 +6,7 @@ import { mat4, glMatrix, vec3 } from "gl-matrix";
 import { Stack } from "%COMMON/Stack";
 import { PlaneAttributes } from "planeAttribsParse";
 import { Light } from "%COMMON/Light";
-import { HitRecord, Ray } from "RayTraceSolver";
+import { HitRecord, Ray, RayTraceSolver } from "RayTraceSolver";
 
 /**
  * A specific implementation of this scene graph. This implementation is still independent
@@ -57,18 +57,26 @@ export class Scenegraph<VertexType extends IVertexData> {
      * @param renderer The {@link ScenegraphRenderer} object that will act as its renderer
      * @throws Exception
      */
-    public setRenderer(renderer: ScenegraphRenderer): void {
-        this.renderer = renderer;
+    public setRenderer(renderer: ScenegraphRenderer): Promise<void> {
+        return new  Promise<void>(resolve => {
+            this.renderer = renderer;
 
-        //now add all the meshes
-        for (let [meshName, mesh] of this.meshes) {
-            this.renderer.addMesh(meshName, mesh);
-        }
+            //now add all the meshes
+            for (let [meshName, mesh] of this.meshes) {
+                this.renderer.addMesh(meshName, mesh);
+            }
 
-        //now add all textures
-        for (let [textureName, textureUrl] of this.textures) {
-            this.renderer.addTexture(textureName, textureUrl);
-        }
+            let promises: Promise<HTMLImageElement>[] = [];
+
+            //now add all textures
+            for (let [textureName, textureUrl] of this.textures) {
+                promises.push(this.renderer.addTexture(textureName, textureUrl));
+            }
+
+            Promise.all(promises).then((images: HTMLImageElement[]) => {
+                resolve(undefined);
+            });
+        });
     }
 
 

@@ -167,8 +167,9 @@ export class View {
                 shaderVarsToVertexAttribs.set("vTexCoord", "texcoord");
                 let renderer: ScenegraphRenderer = new ScenegraphRenderer(this.gl, this.shaderLocations, shaderVarsToVertexAttribs);
                 this.scenegraph = s;
-                this.scenegraph.setRenderer(renderer);
-                resolve(undefined);
+                this.scenegraph.setRenderer(renderer).then(() => {
+                    resolve(undefined);
+                })
             });
           });
         //set it up
