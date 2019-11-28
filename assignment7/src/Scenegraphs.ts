@@ -33,7 +33,6 @@ function main(): void {
             alert("Unable to initialize WebGL. Your browser or machine may not support it.");
             return;
         }
-        //console.log("Window loaded");
         view = new View(gl);
         //set up the ray tracer view
         let raytracerView: RTView = new RTView(gl);
@@ -51,10 +50,8 @@ function main(): void {
                 let currentTime: number = new Date().getTime();
                 let frameRate: number = 1000 * numFrames / (currentTime - lastTime);
                 lastTime = currentTime;
-                //document.getElementById('frameratedisplay').innerHTML = "Frame rate: " + frameRate.toFixed(1);
                 numFrames = 0;
             }
-            //view.animate();
             view.draw();
 
             //this line sets up the animation

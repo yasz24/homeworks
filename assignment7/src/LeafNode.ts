@@ -147,7 +147,6 @@ export class LeafNode extends SGNode {
         }
 
         if (t1 <= t2) {
-            //TODO: fudge the numbers so you don't intersect with objects too close.
             let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, t1));
             let nx: number = intersectionPoint[0] == 0.5 ? 1 : intersectionPoint[0] == -0.5 ? -1 : 0;
             let ny: number = intersectionPoint[1] == 0.5 ? 1 : intersectionPoint[1] == -0.5 ? -1 : 0;

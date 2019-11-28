@@ -110,7 +110,6 @@ export abstract class SGNode {
 
     public copyLight(light: Light): Light {
         let newLight: Light = new Light();
-        //console.log(light);
         newLight.setAmbient(light.getAmbient());
         newLight.setSpecular(light.getSpecular());
         newLight.setDiffuse(light.getDiffuse());
@@ -125,9 +124,6 @@ export abstract class SGNode {
         this.lights.forEach((light) => {
             res.push(this.copyLight(light));
         });
-        // if (res.length >= 1) {
-        //     console.log(res);
-        // }
         return res;
     }
 
@@ -142,9 +138,6 @@ export abstract class SGNode {
             vec4.normalize(spotDir, spotDir);
             light.setSpotDirection(vec3.fromValues(spotDir[0], spotDir[1], spotDir[2]));
         });
-        // if (res.length >= 1) {
-        //     console.log(res);
-        // }
         return res;
     }
 }

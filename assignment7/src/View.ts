@@ -217,6 +217,14 @@ export class View {
                 {
                     "name": "white",
                     "path": "textures/white.png"
+                },
+                {
+                    "name": "die",
+                    "path": "textures/die.png"
+                },
+                {
+                    "name": "earthmap",
+                    "path": "textures/earthmap.png"
                 }
             ],
             "root":
@@ -283,58 +291,53 @@ export class View {
                           0.0
                         ],
                         "spotcutoff": 180.0
+                      },
+                      {
+                        "ambient": [
+                          0.4,
+                          0.4,
+                          0.4
+                        ],
+                        "diffuse": [
+                          0.4,
+                          0.4,
+                          0.4
+                        ],
+                        "specular": [
+                          0.4,
+                          0.4,
+                          0.4
+                        ],
+                        "position": [
+                          0.0, 
+                          -60.0, 
+                          -20,
+                          1.0
+                        ],
+                        "spotdirection": [
+                          0.0,
+                          0.0,
+                          -1.0,
+                          0.0
+                        ],
+                        "spotcutoff": 180.0
                       }
                   ],
                 "children":[
-                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 1)},
+                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 0.5, "earthmap")},
                     {
                         "type":"transform",
                         "name":"place-obj1",
                         "transform":[
                             {"translate":[22,0,0]}
                         ],
-                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 0.2)}
+                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 0.5, "die")}
                     }
                 ]
 
             }
         }
         `;
-
-        //${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 1)},
-        
-        /*
-        {
-                      "ambient": [
-                        0.0,
-                        0.0,
-                        1.0
-                      ],
-                      "diffuse": [
-                        0.0,
-                        0.0,
-                        1.0
-                      ],
-                      "specular": [
-                        0.0,
-                        0.0,
-                        1.0
-                      ],
-                      "position": [
-                        0.0,
-                        60.0,
-                        0.0,
-                        1.0
-                      ],
-                      "spotdirection": [
-                        0.0,
-                        -1.0,
-                        0.0,
-                        0.0
-                      ],
-                      "spotcutoff": 180.0
-                    },
-        */
 
     }
 

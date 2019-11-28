@@ -120,13 +120,6 @@ export class TransformNode extends SGNode {
         mat4.multiply(modelView.peek(), modelView.peek(), this.animationTransform);
         mat4.multiply(modelView.peek(), modelView.peek(), this.transform);
         res = this.getTransformedLights(modelView.peek());
-        // if (this.getTransformedLights(modelView.peek()).length >= 1) {
-        //     console.log(this.getTransformedLights(modelView.peek()));
-        // }
-        // acc = acc.concat(this.getTransformedLights(modelView.peek()));
-        // if (!(acc.length >= accInLen)) {
-        //     console.log("problem");
-        // }
         if (this.child != null)
         res = res.concat(this.child.findLights(modelView));
         modelView.pop();

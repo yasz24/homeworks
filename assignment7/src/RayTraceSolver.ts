@@ -35,10 +35,6 @@ export class RayTraceSolver {
         this.scenegraph = scenegraph;
         this.modelView = modelView;
         this.lights = this.scenegraph.findLights(modelView);
-        //TODO: 
-        //figure out organization - create a map of textureName -> textureObject
-        //How do you handle the gl in textureObject?  Ask tomorrow
-        //
     }
 
     public initTextures(gl: WebGLRenderingContext, scenegraph: Scenegraph<VertexPNT>): Promise<void> {
@@ -56,9 +52,6 @@ export class RayTraceSolver {
             Promise.all(promises).then((images: HTMLImageElement[]) => {
                 resolve(undefined);
             });
-            //TODO: Figure out how to continue only after the texture object's 'data' field has been loaded
-            // console.log("done loading");
-            // resolve();
         });
     }
 
@@ -130,6 +123,7 @@ export class RayTraceSolver {
             let textureCoord: vec2 = hitRecord.normTextureCoordinates;
             let textureObject: TextureObject = this.textureMap.get(hitRecord.texture);
             let texColor:vec4 = textureObject.getColor(textureCoord[0], textureCoord[1]);
+            vec4.scale(texColor, texColor, 1/255);
 
             let absorb: number = hitRecord.material.getAbsorption();
             let reflect: number = hitRecord.material.getReflection();
@@ -152,7 +146,7 @@ export class RayTraceSolver {
 
                     if (shadowHit && !(shadowHit.time < 1 && shadowHit.time > 0) || !shadowHit) {
                         absorbComp = vec4.fromValues(ads[0], ads[1], ads[2], 1);
-                        //absorbComp = vec4.multiply(absorbComp, absorbComp, texColor);
+                        absorbComp = vec4.multiply(absorbComp, absorbComp, texColor);
                     }
                 }
             }
@@ -187,9 +181,6 @@ export class RayTraceSolver {
                     }
                 }
             }
-
-            
-            //TODO: add absorb and reflect to result
             result = vec4.add(result, result, vec4.scale(vec4.create(), absorbComp, absorb));
             result = vec4.add(result, result, vec4.scale(vec4.create(), reflectComp, reflect));
             result[3] = 0;
