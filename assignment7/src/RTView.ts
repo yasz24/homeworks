@@ -32,7 +32,7 @@ export class RTView {
         let height: number = Number(this.canvas.getAttribute("height"));
         let imageData: ImageData = this.canvas.getContext('2d').createImageData(width, height);
         let stack: Stack<mat4> = new Stack();
-        stack.push(mat4.create());
+        stack.push(mat4.create()); //-20, -20, 20
         mat4.lookAt(stack.peek(), vec3.fromValues(-20, -20, 20), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
         let rayTraceSolver: RayTraceSolver = new RayTraceSolver(scenegraph, stack);
         rayTraceSolver.initTextures(this.gl, scenegraph).then(() => {

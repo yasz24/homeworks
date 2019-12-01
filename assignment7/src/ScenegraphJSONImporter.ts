@@ -201,13 +201,28 @@ export namespace ScenegraphJSONImporter {
                 material.setDiffuse(obj["material"]["diffuse"]);
                 material.setShininess(obj["material"]["shininess"]);
             }
-            if ("absorption" in obj["material"]) {
-                if (obj["material"]["absorption"] <= 1) { 
-                    material.setAbsorption(obj["material"]["absorption"]);
-                    material.setReflection(1 - obj["material"]["absorption"]);
+            if ("absorption" in obj["material"] && 
+                "reflection" in obj["material"] && 
+                "transparency" in obj["material"]) {
+                let absorb: number = obj["material"]["absorption"];
+                let reflection: number = obj["material"]["reflection"];
+                let transparency: number = obj["material"]["transparency"];
+                if (absorb + reflection + transparency == 1) {
+                    material.setAbsorption(absorb);
+                    material.setReflection(reflection);
+                    material.setTransparency(transparency);
                 } else {
-                    console.warn("absorption must be less than 1");
+                    console.warn("absorption, reflection, and transparency must add to 1");
                 }
+            } else {
+                material.setAbsorption(1);
+                material.setReflection(0);
+                material.setTransparency(0);
+            }
+            if ("refractiveIndex" in obj["material"]) {
+                material.setRefractiveIndex(obj["material"]["refractiveIndex"]);
+            } else {
+                material.setRefractiveIndex(1);
             }
             result.setMaterial(material);
         }

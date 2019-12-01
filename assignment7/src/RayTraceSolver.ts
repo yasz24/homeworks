@@ -13,6 +13,7 @@ export interface HitRecord {
     material: Material,
     texture: string,
     normTextureCoordinates: vec2
+    incoming: boolean
 }
 
 
@@ -127,10 +128,16 @@ export class RayTraceSolver {
 
             let absorb: number = hitRecord.material.getAbsorption();
             let reflect: number = hitRecord.material.getReflection();
+            let refract: number = hitRecord.material.getTransparency();
             let absorbComp: vec4 = vec4.fromValues(0, 0, 0, 0);
             let reflectComp: vec4 = vec4.fromValues(0, 0, 0, 0);
+            let refractComp: vec4 = vec4.fromValues(0, 0, 0, 0);
             // finding absorb component
             if (hitRecord.material.getAbsorption() > 0) {
+                if (inRay.direction[0] == 0 && inRay.direction[1] == 0) {
+                    console.log("inRay is " + inRay.startPoint + ";" + inRay.direction);
+                    console.log("bounce is " + bounce);
+                }
                 if (phi > Math.cos(light.getSpotCutoff())) {
                     let ads: vec3 = vec3.add(vec3.create(), vec3.add(vec3.create(), ambient, diffuse), specular);
                     //shadows
@@ -153,7 +160,6 @@ export class RayTraceSolver {
             if (hitRecord.material.getReflection() > 0) {
                 if (bounce === 0) {
                     reflectComp = absorbComp;
-                    console.log("bounce is 0");
                 } else {
                     let rayStart: vec4 = hitRecord.intersectionPoint;
                     let incomingRay: vec4 = vec4.normalize(vec4.create(), inRay.direction);
@@ -170,23 +176,55 @@ export class RayTraceSolver {
                     }
                     let reflectColor: vec3 = this.rayCast(newRay, this.modelView, bounce - 1);
                     reflectComp = vec4.fromValues(reflectColor[0], reflectColor[1], reflectColor[2], 1);
-                    if (incomingRay[0] === 0 && incomingRay[1] === 0) {
-                        console.log("start" + newRay.startPoint);
-                        console.log("dir" + newRay.direction);
-                        console.log("realStart" + rayStart);
-                        console.log("incoming" + incomingRay);
-                        console.log("normal" + normalRay);
-                        console.log(reflectColor);
-                        console.log(reflectComp);
-                    }
+                }
+            }
+            // for now does not support objects within objects for transparencies
+            // Assume we are always coming from air for now
+            if (hitRecord.material.getTransparency() > 0) {
+                if (inRay.direction[0] == 0 && inRay.direction[1] == 0) {
+                    console.log("inRay is " + inRay.startPoint + ":" + inRay.direction);
+                    console.log("bounce is " + bounce);
+                }
+                let rayThroughMaterial: Ray = this.getRefractRay(inRay, hitRecord);
+                // assuming that the next hitrecord will be when the ray exits the object
+                let leavingHit: HitRecord = this.scenegraph.getRoot().rayIntersect(rayThroughMaterial, this.modelView);
+                //console.log(leavingHit.incoming);
+                if (leavingHit) {
+                    let leavingRay: Ray = this.getRefractRay(rayThroughMaterial, leavingHit);
+                    //console.log(leavingRay);
+                    let refractColor: vec3 = this.rayCast(leavingRay, this.modelView, bounce);
+                    refractComp = vec4.fromValues(refractColor[0], refractColor[1], refractColor[2], 1);
                 }
             }
             result = vec4.add(result, result, vec4.scale(vec4.create(), absorbComp, absorb));
             result = vec4.add(result, result, vec4.scale(vec4.create(), reflectComp, reflect));
+            result = vec4.add(result, result, vec4.scale(vec4.create(), refractComp, refract));
             result[3] = 0;
             
         }
         return vec3.fromValues(result[0], result[1], result[2]);
+    }
+
+    getRefractRay(inRay: Ray, hit: HitRecord): Ray {
+        let incomingRay: vec4 = vec4.normalize(vec4.create(), inRay.direction);
+        let normalRay: vec4 = vec4.normalize(vec4.create(), hit.normal);
+        
+        let nint:number;
+        if (hit.incoming) {
+            nint = 1/hit.material.getRefractiveIndex();
+        } else {
+            nint = hit.material.getRefractiveIndex()/1;
+            normalRay = vec4.scale(vec4.create(), normalRay, -1);
+        }
+        let sinThetaI: number = Math.sqrt(1 - Math.pow(vec4.dot(normalRay, vec4.scale(vec4.create(), incomingRay, -1)), 2));
+        let cosThetaT: number = Math.sqrt(1 -  Math.pow(nint * sinThetaI,2));
+        let inRayDir: vec4 = vec4.subtract(vec4.create(), vec4.scale(vec4.create(), incomingRay, nint), vec4.scale(vec4.create(), normalRay, (nint * (vec4.dot(normalRay, incomingRay)) + cosThetaT)));
+        let rayStartPoint: vec4 = vec4.add(vec4.create(), hit.intersectionPoint, vec4.scale(vec4.create(), inRayDir, this.FUDGE));
+        let refractRay: Ray = {
+            startPoint: rayStartPoint,
+            direction: inRayDir
+        }
+        return refractRay;
     }
 }
 

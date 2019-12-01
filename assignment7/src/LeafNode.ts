@@ -152,14 +152,16 @@ export class LeafNode extends SGNode {
             let ny: number = intersectionPoint[1] == 0.5 ? 1 : intersectionPoint[1] == -0.5 ? -1 : 0;
             let nz: number = intersectionPoint[2] == 0.5 ? 1 : intersectionPoint[2] == -0.5 ? -1 : 0;
             let normal: vec4 = vec4.fromValues(nx, ny, nz, 0);
-            let time: number = t1 > 0 ? t1 : t2; 
+            let time: number = t1 > 0 ? t1 : t2;
+            let incoming: boolean = t1 > 0 ? true : false;
             let hitrecord: HitRecord = {
                 time: time,
                 intersectionPoint: intersectionPoint,
                 material: this.material,
                 normal: normal,
                 texture: this.textureName,
-                normTextureCoordinates: this.getNormalizedBoxTextureCoord(intersectionPoint)
+                normTextureCoordinates: this.getNormalizedBoxTextureCoord(intersectionPoint),
+                incoming: incoming
             }
             return hitrecord;
         } else {
@@ -187,6 +189,7 @@ export class LeafNode extends SGNode {
                return undefined;
             }
             let time: number = t1 > 0 ? t1 : t2;
+            let incoming: boolean = t1 > 0 ? true : false;
             let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, time));
             let normal: vec4 = vec4.fromValues(intersectionPoint[0], intersectionPoint[1], intersectionPoint[2], 0);
 
@@ -196,7 +199,8 @@ export class LeafNode extends SGNode {
                 material: this.material,
                 normal: normal,
                 texture: this.textureName,
-                normTextureCoordinates: this.getNormalizedSphereTextureCoord(intersectionPoint)
+                normTextureCoordinates: this.getNormalizedSphereTextureCoord(intersectionPoint),
+                incoming: incoming
             }
             return hitrecord;
         }
