@@ -92,31 +92,40 @@ export class LeafNode extends SGNode {
         let objectRay: Ray = {
             startPoint: rayPos,
             direction: rayDir
-        } 
+        }
+        if (objectRay.direction[0] == 0 && objectRay.direction[1] == 0 && objectRay.direction[2] == 0) {
+            console.log("zero ray");
+        }
         switch (this.meshName) {
             case "box":
                 let hitrecord: HitRecord | undefined = this.boxIntersect(objectRay);
                 if (hitrecord) {
-                    hitrecord.intersectionPoint = vec4.transformMat4(hitrecord.intersectionPoint,
-                        hitrecord.intersectionPoint, modelView.peek());
-                    hitrecord.normal = vec4.transformMat4(hitrecord.normal,
-                        hitrecord.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())));
-                    hitrecord.normal[3] = 0; //making sure that the homogenous coordinate remains 0
+                    this.transformHitRecord(hitrecord, modelView);
                 }
                 return hitrecord;
             case "sphere":
                 let hitrecord2: HitRecord | undefined = this.sphereIntersect(objectRay);
                 if (hitrecord2) {
-                    hitrecord2.intersectionPoint = vec4.transformMat4(hitrecord2.intersectionPoint,
-                        hitrecord2.intersectionPoint, modelView.peek());
-                    hitrecord2.normal = vec4.transformMat4(hitrecord2.normal,
-                        hitrecord2.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())));
-                    hitrecord2.normal[3] = 0; //making sure that the homogenous coordinate remains 0
+                    this.transformHitRecord(hitrecord2, modelView);
                 }
                 return hitrecord2;
+            case "cylinder":
+                let hitrecord3: HitRecord | undefined = this.cylinderIntersect(objectRay);
+                if (hitrecord3) {
+                    this.transformHitRecord(hitrecord3, modelView);
+                }
+                return hitrecord3;
             default:
                 return undefined
         }
+    }
+    
+    private transformHitRecord(hitrecord: HitRecord, modelView: Stack<mat4>) {
+        hitrecord.intersectionPoint = vec4.transformMat4(hitrecord.intersectionPoint,
+            hitrecord.intersectionPoint, modelView.peek());
+        hitrecord.normal = vec4.transformMat4(hitrecord.normal,
+            hitrecord.normal, mat4.invert(mat4.create(), mat4.transpose(mat4.create(), modelView.peek())));
+        hitrecord.normal[3] = 0; //making sure that the homogenous coordinate remains 0
     }
 
 
@@ -204,6 +213,92 @@ export class LeafNode extends SGNode {
             }
             return hitrecord;
         }
+    }
+
+    private cylinderIntersect(ray: Ray): HitRecord | undefined {
+        let radius: number = 0.5;
+        let height: number = 0.5;
+
+        let topIntersectT: number;
+        let bottomIntersectT: number;
+        if (ray.direction[1] == 0) {
+            if (ray.startPoint[1] > height || ray.startPoint[1] < 0) {
+                return undefined;
+            }
+            topIntersectT = Number.POSITIVE_INFINITY;
+            bottomIntersectT = Number.NEGATIVE_INFINITY;
+        } else {
+            topIntersectT = (height - ray.startPoint[1]) / ray.direction[1];
+            bottomIntersectT = (0 - ray.startPoint[1]) / ray.direction[1];
+        }
+
+        let A: number = Math.pow(ray.direction[0], 2) + Math.pow(ray.direction[2], 2);
+        let B: number = 2 * ray.direction[0] * ray.startPoint[0] + 2 * ray.direction[2] * ray.startPoint[2];
+        let C: number =  Math.pow(ray.startPoint[0], 2) + Math.pow(ray.startPoint[2], 2) - Math.pow(radius, 2);
+
+        let discriminant: number = Math.pow(B, 2) - (4 * A * C);
+
+        let ct1: number;
+        let ct2: number;
+        if (discriminant < 0) {
+            return undefined;
+        }
+        if (A == 0) {
+            ct1 = Number.POSITIVE_INFINITY;
+            ct2 = Number.NEGATIVE_INFINITY;
+        } else {
+            ct1 = (-B - Math.sqrt(discriminant)) / (2 * A);
+            ct2 = (-B + Math.sqrt(discriminant)) / (2 * A);
+        }
+        
+
+        let circleT1: number = Math.min(ct1, ct2);
+        let circleT2: number = Math.max(ct1, ct2);
+        let topBottomT1: number = Math.min(topIntersectT, bottomIntersectT);
+        let topBottomT2: number = Math.max(topIntersectT, bottomIntersectT);
+
+        let t1: number = Math.max(circleT1, topBottomT1);
+        let t2: number = Math.min(circleT2, topBottomT2);
+        if (t1 > t2 || (t1 < 0 && t2 < 0)) {
+            return undefined;
+        }
+        let time: number;
+        let incoming: boolean;
+        if (t1 >= 0) {
+            time = t1;
+            incoming = true;
+        } else {
+            time = t2;
+            incoming = false;
+        }
+        let intersectionPoint: vec4 = vec4.add(vec4.create(), ray.startPoint, vec4.scale(vec4.create(), ray.direction, time));
+        
+        let normal: vec4;
+        if (intersectionPoint[1] == 0) {
+            normal = vec4.fromValues(0, -1, 0, 0);
+        } else if (intersectionPoint[1] == height) {
+            normal = vec4.fromValues(0, 1, 0, 0);
+        } else {
+            normal = vec4.fromValues(intersectionPoint[0], 0, intersectionPoint[2], 0);
+        }
+        let hit: HitRecord = {
+            time: time,
+            intersectionPoint: intersectionPoint,
+            normal: normal,
+            material: this.material,
+            texture: this.textureName,
+            normTextureCoordinates: this.getNormalizedCylinderTextureCoord(intersectionPoint),
+            incoming: incoming
+        }
+        return hit;
+    }
+
+    private getNormalizedCylinderTextureCoord(intersectionPoint: vec4): vec2 {
+        let height: number = 0.5;
+        let theta: number = Math.atan2(-intersectionPoint[2], intersectionPoint[0]);
+        let textureX: number = (theta + Math.PI) / (2 * Math.PI);
+        let textureY: number = intersectionPoint[1] / height;
+        return vec2.fromValues(textureX, textureY);
     }
     
     // returns the texture coordinates assuming the texture is 1 x 1

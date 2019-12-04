@@ -195,6 +195,10 @@ export class View {
                 {
                     "name":"box",
                     "path":"models/box.obj"
+                },
+                {
+                    "name":"cylinder",
+                    "path":"models/cylinder.obj"
                 }
             ],
             "images": [
@@ -294,24 +298,24 @@ export class View {
                       },
                       {
                         "ambient": [
-                          0.4,
-                          0.4,
+                          0.0,
+                          0.0,
                           0.4
                         ],
                         "diffuse": [
-                          0.4,
-                          0.4,
+                          0.0,
+                          0.0,
                           0.4
                         ],
                         "specular": [
-                          0.4,
-                          0.4,
+                          0.0,
+                          0.0,
                           0.4
                         ],
                         "position": [
+                          -20.0, 
                           0.0, 
-                          -60.0, 
-                          -20,
+                          20,
                           1.0
                         ],
                         "spotdirection": [
@@ -324,14 +328,15 @@ export class View {
                       }
                   ],
                 "children":[
-                    ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 0.5, 0, 0.5, "earthmap", 1.01)},
+                    ${this.objectJson("cylinder", [20, 10, 20], [1,1,1], 1, 1, 0, 0, "wall", 1)},
                     {
                         "type":"transform",
                         "name":"place-obj1",
                         "transform":[
-                            {"translate":[22,0,0]}
+                            {"translate":[22,0,0]},
+                            {"scale":[1, 20, 20]}
                         ],
-                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 1, 0, 0, "die")}
+                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 1, 0, 0, "white")}
                     }
                 ]
 
@@ -339,113 +344,17 @@ export class View {
         }
         `;
 
-    }
-
-    private drawPlane(): string {
-        let scale: number[] = [3, 3, 3]
-        let color: number[] = [0, 1, 0]
-        return `
-            {
-                "type":"transform",
-                "name":"aeroplane",
-                "transform":[
-                    {"rotate":[90,1,0,0]}
-                ],
-                "child": ${this.objectJson("plane",scale, color, 4, 1, 0, 0)},
-                "lights": [
-                    {
-                        "ambient": [
-                          0.0,
-                          0.0,
-                          0.0
+        /*
+        ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 0.5, 0, 0.5, "white", 1.01)},
+        {
+                        "type":"transform",
+                        "name":"place-obj1",
+                        "transform":[
+                            {"translate":[22,0,0]}
                         ],
-                        "diffuse": [
-                          1.0,
-                          1.0,
-                          0.0
-                        ],
-                        "specular": [
-                          1.0,
-                          1.0,
-                          0.0
-                        ],
-                        "position": [
-                          0.0, 
-                          1.5, 
-                          0.0,
-                          1.0
-                        ],
-                        "spotdirection": [
-                          0.0,
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "spotcutoff": 20.0
-                      },
-                      {
-                        "ambient": [
-                          0.0,
-                          0.0,
-                          0.0
-                        ],
-                        "diffuse": [
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "specular": [
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "position": [
-                          3.0, 
-                          1.5, 
-                          0.0,
-                          1.0
-                        ],
-                        "spotdirection": [
-                          0.0,
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "spotcutoff": 20.0
-                      },
-                      {
-                        "ambient": [
-                          0.0,
-                          0.0,
-                          0.0
-                        ],
-                        "diffuse": [
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "specular": [
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "position": [
-                          -3.0, 
-                          1.5, 
-                          0.0,
-                          1.0
-                        ],
-                        "spotdirection": [
-                          0.0,
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "spotcutoff": 20.0
-                      }
-                ]
-            }
-        `
+                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 1, 0, 0, "die")}
+                    }
+        */
     }
 
     private drawObject1(): string {

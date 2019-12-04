@@ -134,10 +134,6 @@ export class RayTraceSolver {
             let refractComp: vec4 = vec4.fromValues(0, 0, 0, 0);
             // finding absorb component
             if (hitRecord.material.getAbsorption() > 0) {
-                if (inRay.direction[0] == 0 && inRay.direction[1] == 0) {
-                    console.log("inRay is " + inRay.startPoint + ";" + inRay.direction);
-                    console.log("bounce is " + bounce);
-                }
                 if (phi > Math.cos(light.getSpotCutoff())) {
                     let ads: vec3 = vec3.add(vec3.create(), vec3.add(vec3.create(), ambient, diffuse), specular);
                     //shadows
@@ -181,17 +177,11 @@ export class RayTraceSolver {
             // for now does not support objects within objects for transparencies
             // Assume we are always coming from air for now
             if (hitRecord.material.getTransparency() > 0) {
-                if (inRay.direction[0] == 0 && inRay.direction[1] == 0) {
-                    console.log("inRay is " + inRay.startPoint + ":" + inRay.direction);
-                    console.log("bounce is " + bounce);
-                }
+
                 let rayThroughMaterial: Ray = this.getRefractRay(inRay, hitRecord);
                 // assuming that the next hitrecord will be when the ray exits the object
-                let leavingHit: HitRecord = this.scenegraph.getRoot().rayIntersect(rayThroughMaterial, this.modelView);
-                //console.log(leavingHit.incoming);
-                if (leavingHit) {
+                let leavingHit: HitRecord = this.scenegraph.getRoot().rayIntersect(rayThroughMaterial, this.modelView);                if (leavingHit) {
                     let leavingRay: Ray = this.getRefractRay(rayThroughMaterial, leavingHit);
-                    //console.log(leavingRay);
                     let refractColor: vec3 = this.rayCast(leavingRay, this.modelView, bounce);
                     refractComp = vec4.fromValues(refractColor[0], refractColor[1], refractColor[2], 1);
                 }
