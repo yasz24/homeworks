@@ -199,6 +199,10 @@ export class View {
                 {
                     "name":"cylinder",
                     "path":"models/cylinder.obj"
+                },
+                {
+                    "name":"cone",
+                    "path":"models/cone.obj"
                 }
             ],
             "images": [
@@ -328,7 +332,7 @@ export class View {
                       }
                   ],
                 "children":[
-                    ${this.objectJson("cylinder", [20, 10, 20], [1,1,1], 1, 1, 0, 0, "wall", 1)},
+                    ${this.objectJson("cone", [20, 10, 20], [1,1,1], 1, 1, 0, 0, "wall", 1)},
                     {
                         "type":"transform",
                         "name":"place-obj1",

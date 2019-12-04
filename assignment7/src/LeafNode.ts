@@ -115,6 +115,12 @@ export class LeafNode extends SGNode {
                     this.transformHitRecord(hitrecord3, modelView);
                 }
                 return hitrecord3;
+            case "cone":
+                let hitrecord4: HitRecord | undefined = this.coneIntersect(objectRay);
+                if (hitrecord4) {
+                    this.transformHitRecord(hitrecord4, modelView);
+                }
+                return hitrecord4;
             default:
                 return undefined
         }
@@ -287,13 +293,118 @@ export class LeafNode extends SGNode {
             normal: normal,
             material: this.material,
             texture: this.textureName,
-            normTextureCoordinates: this.getNormalizedCylinderTextureCoord(intersectionPoint),
+            normTextureCoordinates: this.getNormalizedCylinderAndConeTextureCoord(intersectionPoint),
             incoming: incoming
         }
         return hit;
     }
 
-    private getNormalizedCylinderTextureCoord(intersectionPoint: vec4): vec2 {
+    private coneIntersect(ray: Ray): HitRecord | undefined {
+        let bottomRadius: number = 0.5;
+        let height: number = 0.5;
+
+        let topIntersectT: number;
+        let bottomIntersectT: number;
+        if (ray.direction[1] == 0) {
+            if (ray.startPoint[1] > height || ray.startPoint[1] < 0) {
+                return undefined;
+            }
+            topIntersectT = Number.POSITIVE_INFINITY;
+            bottomIntersectT = Number.NEGATIVE_INFINITY;
+        } else {
+            topIntersectT = (height - ray.startPoint[1]) / ray.direction[1];
+            bottomIntersectT = (0 - ray.startPoint[1]) / ray.direction[1];
+        }
+
+        let bottomRadiusOverHeightSquared: number = Math.pow( bottomRadius / height, 2);
+        let A: number = Math.pow(ray.direction[0], 2) + Math.pow(ray.direction[2], 2) 
+                        - bottomRadiusOverHeightSquared * Math.pow(ray.direction[1], 2);
+        let B: number = 2 * ray.direction[0] * ray.startPoint[0] + 2 * ray.direction[2] * ray.startPoint[2] 
+                        + 2 * height * bottomRadiusOverHeightSquared * ray.direction[1] - 2 * bottomRadiusOverHeightSquared * ray.direction[1] * ray.startPoint[1];
+        let C: number =  Math.pow(ray.startPoint[0], 2) + Math.pow(ray.startPoint[2], 2) 
+                        - Math.pow(bottomRadius, 2) + 2 * height * bottomRadiusOverHeightSquared * ray.startPoint[1] 
+                        - bottomRadiusOverHeightSquared * Math.pow(ray.startPoint[1], 2);
+
+        let discriminant: number = Math.pow(B, 2) - (4 * A * C);
+
+        let ct1: number;
+        let ct2: number;
+        if (discriminant < 0) {
+            return undefined;
+        }
+        if (A == 0) {
+            ct1 = Number.POSITIVE_INFINITY;
+            ct2 = Number.NEGATIVE_INFINITY;
+        } else {
+            ct1 = (-B - Math.sqrt(discriminant)) / (2 * A);
+            ct2 = (-B + Math.sqrt(discriminant)) / (2 * A);
+        }
+        
+
+        let circleT1: number = Math.min(ct1, ct2);
+        let circleT2: number = Math.max(ct1, ct2);
+        // check if they are on the top inverse cone
+        let circleT1YPos: number = this.rayPosAtTime(ray, circleT1)[1];
+        let circleT2YPos: number = this.rayPosAtTime(ray, circleT2)[1];
+        if (circleT1YPos > height && circleT2YPos <= height) {
+            circleT1 = circleT2;
+            circleT2 = Number.MAX_VALUE;
+        } else if (circleT1YPos <= height && circleT2YPos > height) {
+            circleT2 = circleT1;
+            circleT1 = Number.MIN_VALUE;
+        } else if (circleT1 == circleT2) {
+            // only have to worry about this if the intersection is actually valid
+            if (circleT1YPos < height) {
+                if (ray.direction[1] > 0) {
+                    circleT1 = Number.MIN_VALUE;
+                } else if (ray.direction[1] < 0) {
+                    circleT2 = Number.MIN_VALUE;
+                }
+            }
+        }
+        let topBottomT1: number = Math.min(topIntersectT, bottomIntersectT);
+        let topBottomT2: number = Math.max(topIntersectT, bottomIntersectT);
+
+        let t1: number = Math.max(circleT1, topBottomT1);
+        let t2: number = Math.min(circleT2, topBottomT2);
+        if (t1 > t2 || (t1 < 0 && t2 < 0)) {
+            return undefined;
+        }
+        let time: number;
+        let incoming: boolean;
+        if (t1 >= 0) {
+            time = t1;
+            incoming = true;
+        } else {
+            time = t2;
+            incoming = false;
+        }
+        let intersectionPoint: vec4 = this.rayPosAtTime(ray, time);
+        let normal: vec4;
+        if (intersectionPoint[1] == 0) {
+            normal = vec4.fromValues(0, -1, 0, 0);
+        } else if (intersectionPoint[1] == height) {
+            normal = vec4.fromValues(0, 1, 0, 0);
+        } else {
+            let y = Math.pow(bottomRadius, 2) / height;
+            normal = vec4.fromValues(intersectionPoint[0], y, intersectionPoint[2], 0);
+        }
+        let hit: HitRecord = {
+            time: time,
+            intersectionPoint: intersectionPoint,
+            normal: normal,
+            material: this.material,
+            texture: this.textureName,
+            normTextureCoordinates: this.getNormalizedCylinderAndConeTextureCoord(intersectionPoint),
+            incoming: incoming
+        }
+        return hit;
+    }//TODO: look at if you're above the thing, maybe it's catching the remnant cone and above max y stuff when the slope of y isn't 0
+
+    private rayPosAtTime(ray: Ray, time: number): vec4 {
+        return vec4.add(vec4.create(), ray.startPoint, vec4.scale(vec4.create(), ray.direction, time));
+    }
+    private getNormalizedCylinderAndConeTextureCoord(intersectionPoint: vec4): vec2 {
         let height: number = 0.5;
         let theta: number = Math.atan2(-intersectionPoint[2], intersectionPoint[0]);
         let textureX: number = (theta + Math.PI) / (2 * Math.PI);
