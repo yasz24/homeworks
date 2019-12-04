@@ -162,7 +162,8 @@ export class LeafNode extends SGNode {
         }
 
         if (t1 <= t2) {
-            let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, t1));
+            let intersectionPoint: vec4 = this.rayPosAtTime(ray, t1);
+            //vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, t1));
             let nx: number = intersectionPoint[0] == 0.5 ? 1 : intersectionPoint[0] == -0.5 ? -1 : 0;
             let ny: number = intersectionPoint[1] == 0.5 ? 1 : intersectionPoint[1] == -0.5 ? -1 : 0;
             let nz: number = intersectionPoint[2] == 0.5 ? 1 : intersectionPoint[2] == -0.5 ? -1 : 0;
@@ -205,7 +206,8 @@ export class LeafNode extends SGNode {
             }
             let time: number = t1 > 0 ? t1 : t2;
             let incoming: boolean = t1 > 0 ? true : false;
-            let intersectionPoint: vec4 = vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, time));
+            let intersectionPoint: vec4 = this.rayPosAtTime(ray, time);
+            //vec4.add(vec4.create(), startPoint, vec4.scale(vec4.create(), direction, time));
             let normal: vec4 = vec4.fromValues(intersectionPoint[0], intersectionPoint[1], intersectionPoint[2], 0);
 
             let hitrecord: HitRecord = {
@@ -277,7 +279,8 @@ export class LeafNode extends SGNode {
             time = t2;
             incoming = false;
         }
-        let intersectionPoint: vec4 = vec4.add(vec4.create(), ray.startPoint, vec4.scale(vec4.create(), ray.direction, time));
+        let intersectionPoint: vec4 = this.rayPosAtTime(ray, time);
+        //vec4.add(vec4.create(), ray.startPoint, vec4.scale(vec4.create(), ray.direction, time));
         
         let normal: vec4;
         if (intersectionPoint[1] == 0) {

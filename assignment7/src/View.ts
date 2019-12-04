@@ -183,182 +183,204 @@ export class View {
         });
     }
 
-    //a JSON representation of a jack-in-the-box
-    private json2(): string {
+        //a JSON representation of a jack-in-the-box
+        private json2(): string {
+            return `
+            {
+                "instances": [
+                    {
+                        "name":"sphere",
+                        "path":"models/sphere.obj"
+                    },
+                    {
+                        "name":"box",
+                        "path":"models/box.obj"
+                    },
+                    {
+                        "name":"cylinder",
+                        "path":"models/cylinder.obj"
+                    },
+                    {
+                        "name":"cone",
+                        "path":"models/cone.obj"
+                    },
+                    {
+                        "name":"plane",
+                        "path":"models/aeroplane.obj"
+                    }
+                ],
+                "images": [
+                    {
+                        "name": "roof",
+                        "path": "textures/roof.jpg"
+                    },
+                    {
+                        "name": "wall",
+                        "path": "textures/wall-bricks-220182.jpg"
+                    },
+                    {
+                        "name": "wall2",
+                        "path": "textures/wall-bricks-220182Side.jpg"
+                    },
+                    {
+                        "name": "wall3",
+                        "path": "textures/wall-bricks-220182Dark.jpg"
+                    },
+                    {
+                        "name": "white",
+                        "path": "textures/white.png"
+                    }
+                ],
+                "root":
+                {
+                    "type":"group",
+                    "lights": [
+                        {
+                          "ambient": [
+                            0.8,
+                            0.35,
+                            0.0
+                          ],
+                          "diffuse": [
+                            0.8,
+                            0.35,
+                            0.0
+                          ],
+                          "specular": [
+                            0.8,
+                            0.35,
+                            0.0
+                          ],
+                          "position": [
+                            0.0,
+                            100.0,
+                            -27.5,
+                            1.0
+                          ],
+                          "spotdirection": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "spotcutoff": 180.0
+                        },
+                        {
+                            "ambient": [
+                              0.4,
+                              0.4,
+                              0.4
+                            ],
+                            "diffuse": [
+                              0.4,
+                              0.4,
+                              0.4
+                            ],
+                            "specular": [
+                              0.4,
+                              0.4,
+                              0.4
+                            ],
+                            "position": [
+                              80.0, 
+                              175.0, 
+                              -27.5,
+                              1.0
+                            ],
+                            "spotdirection": [
+                              0.0,
+                              0.0,
+                              0.0,
+                              0.0
+                            ],
+                            "spotcutoff": 180.0
+                          },
+                          {
+                            "ambient": [
+                              0,
+                              0,
+                              0.2
+                            ],
+                            "diffuse": [
+                              0,
+                              0,
+                              0.2
+                            ],
+                            "specular": [
+                              0,
+                              0,
+                              0.2
+                            ],
+                            "position": [
+                              80.0, 
+                              175.0, 
+                              20,
+                              1.0
+                            ],
+                            "spotdirection": [
+                              0.0,
+                              0.0,
+                              0.0,
+                              0.0
+                            ],
+                            "spotcutoff": 180.0
+                          }
+                      ],
+                    "children":[            ${this.drawObject1()}, ${this.drawObject2()}, ${this.drawObject3()}, 
+                        ${this.drawObject4()}, ${this.drawObject5()}, ${this.drawObject6()}, 
+                        ${this.drawObject7()}, 
+                        ${this.drawObject8()},
+                        ${this.drawObject9()},
+                        ${this.drawObject10()},
+                        ${this.drawObject11()},
+                        ${this.drawObject12()},
+                        ${this.drawObject13()},
+                        ${this.drawObject14()},
+                        ${this.drawObject15()},
+                        ${this.drawObject16()},
+                        ${this.drawObject17()},
+                        ${this.drawObject18()},
+                        ${this.drawObject19()},
+                        ${this.drawObject20()},
+                        ${this.drawObject21()},
+                        ${this.drawObject22()},
+                        ${this.drawObject23()},
+                        ${this.drawObject24()},
+                        ${this.drawFloor()},
+                        ${this.drawBubble(vec3.fromValues(45, 80, 0))},
+                        ${this.drawBubble(vec3.fromValues(105, 40, -20))},
+                        ${this.drawBubble(vec3.fromValues(10, 60, -5))},
+                        ${this.drawBubble(vec3.fromValues(106, 70, -15))}]
+    
+                }
+            }
+            `;
+        }
+    
+    private drawBubble(translate: vec3): string {
         return `
         {
-            "instances": [
-                {
-                    "name":"sphere",
-                    "path":"models/sphere.obj"
-                },
-                {
-                    "name":"box",
-                    "path":"models/box.obj"
-                },
-                {
-                    "name":"cylinder",
-                    "path":"models/cylinder.obj"
-                },
-                {
-                    "name":"cone",
-                    "path":"models/cone.obj"
-                }
+            "type":"transform",
+            "name":"place-obj1",
+            "transform":[
+                {"translate":[${translate[0]}, ${translate[1]}, ${translate[2]}]}
             ],
-            "images": [
-                {
-                    "name": "roof",
-                    "path": "textures/roof.jpg"
-                },
-                {
-                    "name": "wall",
-                    "path": "textures/wall-bricks-220182.jpg"
-                },
-                {
-                    "name": "wall2",
-                    "path": "textures/wall-bricks-220182Side.jpg"
-                },
-                {
-                    "name": "wall3",
-                    "path": "textures/wall-bricks-220182Dark.jpg"
-                },
-                {
-                    "name": "white",
-                    "path": "textures/white.png"
-                },
-                {
-                    "name": "die",
-                    "path": "textures/die.png"
-                },
-                {
-                    "name": "earthmap",
-                    "path": "textures/earthmap.png"
-                }
-            ],
-            "root":
-            {
-                "type":"group",
-                "lights": [
-                    {
-                        "ambient": [
-                          0.0,
-                          0.0,
-                          0.0
-                        ],
-                        "diffuse": [
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "specular": [
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "position": [
-                          -60.0,
-                          0.0,
-                          -60.0,
-                          0.0,
-                          1.0
-                        ],
-                        "spotdirection": [
-                          0.0,
-                          1.0,
-                          0.0,
-                          0.0
-                        ],
-                        "spotcutoff": 180.0
-                      },
-                    {
-                        "ambient": [
-                          0.4,
-                          0.4,
-                          0.4
-                        ],
-                        "diffuse": [
-                          0.4,
-                          0.4,
-                          0.4
-                        ],
-                        "specular": [
-                          0.4,
-                          0.4,
-                          0.4
-                        ],
-                        "position": [
-                          0.0, 
-                          60.0, 
-                          -20,
-                          1.0
-                        ],
-                        "spotdirection": [
-                          0.0,
-                          0.0,
-                          -1.0,
-                          0.0
-                        ],
-                        "spotcutoff": 180.0
-                      },
-                      {
-                        "ambient": [
-                          0.0,
-                          0.0,
-                          0.4
-                        ],
-                        "diffuse": [
-                          0.0,
-                          0.0,
-                          0.4
-                        ],
-                        "specular": [
-                          0.0,
-                          0.0,
-                          0.4
-                        ],
-                        "position": [
-                          -20.0, 
-                          0.0, 
-                          20,
-                          1.0
-                        ],
-                        "spotdirection": [
-                          0.0,
-                          0.0,
-                          -1.0,
-                          0.0
-                        ],
-                        "spotcutoff": 180.0
-                      }
-                  ],
-                "children":[
-                    ${this.objectJson("cone", [20, 10, 20], [1,1,1], 1, 1, 0, 0, "wall", 1)},
-                    {
-                        "type":"transform",
-                        "name":"place-obj1",
-                        "transform":[
-                            {"translate":[22,0,0]},
-                            {"scale":[1, 20, 20]}
-                        ],
-                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 1, 0, 0, "white")}
-                    }
-                ]
-
-            }
+            "child": ${this.objectJson("sphere", [5, 2.5, 5], [1, 1, 1], 50, 0.2, 0, 0.8, "white", 1.01)}
         }
-        `;
+    ` 
+    }
 
-        /*
-        ${this.objectJson("sphere", [20, 10, 20], [1,1,1], 1, 0.5, 0, 0.5, "white", 1.01)},
+    private drawFloor(): string {
+        return  `
         {
-                        "type":"transform",
-                        "name":"place-obj1",
-                        "transform":[
-                            {"translate":[22,0,0]}
-                        ],
-                        "child": ${this.objectJson("box", [10, 10, 10], [1,1,1], 1, 1, 0, 0, "die")}
-                    }
-        */
+            "type":"transform",
+            "name":"place-obj1",
+            "transform":[
+                {"translate":[70.5,-7, -35]}
+            ],
+            "child": ${this.objectJson("box", [180, 7, 95], [1, 1, 1], 50, 0.5, 0.5, 0, "white", 1)}
+        }
+    `   
     }
 
     private drawObject1(): string {
@@ -833,9 +855,42 @@ export class View {
         }`
     }
 
+    /*    private objectJson (type: string, scale: number[], color: number[], objNum: number, texture?: string): string {
+        let normalizeCenter = 0.25;
+        let normalizeYscale = 2
+        let textureString: string = ""
+        if (texture) {
+            textureString = `"texture": "${texture}",`
+        }
+
+        if (type === "box") {
+            normalizeCenter = 0.5
+            normalizeYscale = 1
+        }
+        return `{
+            "type":"transform",
+            "name":"${type}-obj${objNum}",
+            "transform":[
+                {"scale":[${scale[0]}, ${normalizeYscale * scale[1]}, ${scale[2]}]},
+                {"translate":[0,${normalizeCenter},0]}
+            ],
+            "child": {
+                    "type":"object",
+                    "instanceof":"${type}",
+                    ${textureString}
+                    "material": {
+                        "ambient":[${color[0] / 1.5}, ${color[1] / 1.5}, ${color[2] / 1.5}],
+                        "specular":[${color[0]}, ${color[1]}, ${color[2]}],
+                        "diffuse":[${color[0]}, ${color[1]}, ${color[2]}],
+                        "shininess": 10
+                    }
+            }
+            
+        }`
+    } */
     private objectJson (type: string, scale: number[], color: number[], objNum: number, absorption: number, 
         reflection: number, transparency: number, texture?: string, refractiveInd?: number): string {
-        let normalizeCenter = 0.25;
+        let normalizeCenter = 0;
         let normalizeYscale = 2;
         let textureString: string = "";
         let refractiveIndex: number = 1;
@@ -854,7 +909,8 @@ export class View {
             "type":"transform",
             "name":"${type}-obj${objNum}",
             "transform":[
-                {"scale":[${scale[0]}, ${normalizeYscale * scale[1]}, ${scale[2]}]}
+                {"scale":[${scale[0]}, ${normalizeYscale * scale[1]}, ${scale[2]}]},
+                {"translate":[0,${normalizeCenter},0]}
             ],
             "child": {
                     "type":"object",
@@ -874,191 +930,6 @@ export class View {
             
         }`
     } 
-
-    
-
-    //a JSON representation of a simple scene graph
-    private json(): string {
-        return `
-        {
-            "instances": [
-                {
-                    "name":"sphere",
-                    "path":"models/sphere.obj"
-                },
-                {
-                    "name":"box",
-                    "path":"models/box.obj"
-                },
-                {
-                    "name":"cylinder",
-                    "path":"models/cylinder.obj"
-                },
-                {
-                    "name":"cone",
-                    "path":"models/cone.obj"
-                }
-            ],
-            "root": {
-                "type":"group",
-                "children":[
-                {
-                    "type":"transform",
-                    "transform":[
-                        {"scale":[50,5,50]}
-                    ],
-                    "child": {
-                        "type":"object",
-                        "instanceof":"box",
-                        "material": {
-                            "color":[0.5,0.5,0.5]
-                        }
-                    }
-                },
-                {
-                    "type":"transform",
-                    "name":"face",
-                    "transform":[
-                        {"translate":[0,25,0]}
-                    ],        
-                    "child": {
-                        "type":"group",
-                        "children": [
-                            {
-                                "type":"transform",
-                                "name":"actualface",
-                                "transform":[
-                                    {"scale":[20,25,20]}
-                                ],
-                                "child": {
-                                    "type":"object",
-                                    "instanceof":"sphere",
-                                    "material": {
-                                        "color":[1,1,0.8]
-                                    }
-                                }
-                            },
-                            {
-                                "type":"transform",
-                                "name":"lefteye",
-                                "transform":[
-                                    {"translate":[7,15,12]},
-                                    {"scale":[3,4,3]}
-                                ],
-                                "child": {
-                                    "type":"object",
-                                    "instanceof":"sphere",
-                                    "material": {
-                                        "color":[0,0,0]
-                                    }
-                                }
-                            },
-                            {
-                                "type":"transform",
-                                "name":"righteye",
-                                "transform":[
-                                    {"translate":[-7,15,12]},
-                                    {"scale":[3,4,3]}
-                                ],
-                                "child": {
-                                    "type":"object",
-                                    "instanceof":"sphere",
-                                    "material": {
-                                        "color":[0,0,0]
-                                    }
-                                }
-                            },
-                            {
-                                "type":"transform",
-                                "name":"nose",
-                                "transform":[
-                                    {"translate":[0,10,10]},
-                                    {"rotate":[90,1,0,0]},
-                                    {"scale":[5,20,5]}
-                                ],
-                                "child": {
-                                    "type":"object",
-                                    "instanceof":"cylinder",
-                                    "material": {
-                                        "color":[1,0,0]
-                                    }
-                                }
-                            },
-                            {
-                                "type":"transform",
-                                "name":"hat",
-                                "transform":[
-                                    {"translate":[0,20,0]},
-                                    {"scale":[10,25,10]}
-                                ],
-                                "child": {
-                                    "type":"object",
-                                    "instanceof":"cone",
-                                    "material": {
-                                        "color":[1,0,1]
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }]
-            }
-        }
-        `;
-        return `
-        {
-            "instances": [
-            {
-                "name": "box",
-                "path": "models/box.obj"
-            },
-            {
-                "name": "aeroplane",
-                "path": "models/aeroplane.obj"
-            }
-            ],
-            "root": {
-                "type": "group",
-                "name": "root",
-                "children": [
-                    {
-                        "type":"transform",
-                        "name": "box-transform",
-                        "transform": [
-                            {"scale": [50,50,50]}
-                        ],
-                        "child": {
-                            "type": "object",
-                            "name": "boxnode",
-                            "instanceof": "box",
-                            "material": {
-                                "color": [1,0,0]
-                            }
-                        }
-                    },
-                    {
-                        "type":"transform",
-                        "name": "aeroplane-transform",
-                        "transform": [
-                        {"rotate": [180,0,1,0]},
-                        {"rotate": [90,1,0,0]},
-                        {"scale": [30,30,30]}
-                        ],
-                        "child": {
-                            "type": "object",
-                            "name": "aeroplane-node",
-                            "instanceof": "aeroplane",
-                            "material": {
-                                "color": [1,1,0]
-                            }
-                        }
-                    }
-                ]
-            }
-        }
-        `;
-    }
-
 
    
 
@@ -1092,8 +963,8 @@ export class View {
         this.modelview.push(mat4.create());
         this.modelview.push(mat4.clone(this.modelview.peek()));
         
-        mat4.lookAt(this.modelview.peek(), vec3.fromValues(-20, -20, 20), vec3.fromValues(0,0,0), vec3.fromValues(0, 1, 0));
-
+        mat4.lookAt(this.modelview.peek(), vec3.fromValues(80, 90, 60), vec3.fromValues(60, 20, -27.5), vec3.fromValues(0, 1, 0));
+        
         let lights = this.scenegraph.findLights(this.modelview);
 
         //send all the light colors
